@@ -1,0 +1,1644 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SQE个人知识库</title>
+<style>
+:root{--sidebar-bg:#1a1f36;--sidebar-hover:#2d3352;--sidebar-active:#3a4172;--sidebar-text:#a0aec0;--sidebar-text-active:#fff;--sidebar-width:220px;--header-bg:#fff;--body-bg:#f0f2f5;--card-bg:#fff;--primary:#2563eb;--primary-hover:#1d4ed8;--primary-light:#dbeafe;--success:#16a34a;--warning:#d97706;--danger:#dc2626;--text-primary:#1e293b;--text-secondary:#64748b;--border:#e2e8f0;--radius:8px;--shadow:0 1px 3px rgba(0,0,0,0.08),0 1px 2px rgba(0,0,0,0.06);--shadow-lg:0 10px 25px rgba(0,0,0,0.12);--transition:0.2s ease;}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{font-size:14px}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;color:var(--text-primary);background:var(--body-bg);display:flex;min-height:100vh;overflow-x:hidden}
+::-webkit-scrollbar{width:6px;height:6px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:#cbd5e1;border-radius:3px}
+::-webkit-scrollbar-thumb:hover{background:#94a3b8}
+
+/* Sidebar */
+.sidebar{width:var(--sidebar-width);background:var(--sidebar-bg);color:var(--sidebar-text);display:flex;flex-direction:column;position:fixed;top:0;left:0;bottom:0;z-index:100;overflow-y:auto}
+.sidebar-header{padding:16px 16px;border-bottom:1px solid rgba(255,255,255,0.06)}
+.sidebar-header h1{font-size:15px;color:#fff;font-weight:700}
+.sidebar-header .subtitle{font-size:10px;color:var(--sidebar-text);margin-top:2px;opacity:0.7}
+.sidebar-nav{padding:4px 0;flex:1}
+.nav-item{display:flex;align-items:center;gap:8px;padding:8px 14px;cursor:pointer;color:var(--sidebar-text);transition:all var(--transition);font-size:12.5px;border-left:3px solid transparent}
+.nav-item:hover{background:var(--sidebar-hover);color:#e2e8f0}
+.nav-item.active{background:var(--sidebar-active);color:var(--sidebar-text-active);border-left-color:var(--primary)}
+.nav-item .icon{font-size:14px;width:18px;text-align:center;flex-shrink:0}
+.nav-item .label{flex:1}
+.nav-divider{height:1px;background:rgba(255,255,255,0.06);margin:4px 14px}
+.nav-section-title{padding:4px 14px 2px;font-size:9px;text-transform:uppercase;letter-spacing:1px;opacity:0.4}
+.sidebar-footer{padding:8px 14px;border-top:1px solid rgba(255,255,255,0.06);font-size:9px;opacity:0.4;text-align:center}
+
+/* Main */
+.main-content{margin-left:var(--sidebar-width);flex:1;display:flex;flex-direction:column;min-height:100vh}
+.top-bar{background:var(--header-bg);padding:10px 20px;display:flex;align-items:center;justify-content:space-between;box-shadow:0 1px 2px rgba(0,0,0,0.05);position:sticky;top:0;z-index:50}
+.top-bar .page-title{font-size:16px;font-weight:600}
+.top-bar .breadcrumb{font-size:11px;color:var(--text-secondary)}
+.content-area{padding:14px 20px;flex:1}
+.page{display:none}
+.page.active{display:block}
+
+/* Card */
+.card{background:var(--card-bg);border-radius:var(--radius);box-shadow:var(--shadow);margin-bottom:14px}
+.card-header{padding:10px 18px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:6px}
+.card-header h3{font-size:14px;font-weight:600}
+.card-body{padding:14px 18px}
+
+/* Stats */
+.stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px;margin-bottom:18px}
+.stat-card{background:var(--card-bg);border-radius:var(--radius);padding:12px 16px;box-shadow:var(--shadow)}
+.stat-card .stat-label{font-size:11px;color:var(--text-secondary);margin-bottom:2px}
+.stat-card .stat-value{font-size:24px;font-weight:700;color:var(--text-primary)}
+.stat-card .stat-sub{font-size:11px;color:var(--text-secondary);margin-top:2px}
+
+/* Tags */
+.tag{display:inline-block;padding:1px 6px;border-radius:3px;font-size:10px;font-weight:500;white-space:nowrap}
+.tag-blue{background:#dbeafe;color:#1d4ed8}
+.tag-green{background:#dcfce7;color:#16a34a}
+.tag-yellow{background:#fef3c7;color:#d97706}
+.tag-red{background:#fee2e2;color:#dc2626}
+.tag-purple{background:#f3e8ff;color:#9333ea}
+.tag-gray{background:#f1f5f9;color:#64748b}
+
+/* Buttons */
+.btn{display:inline-flex;align-items:center;gap:3px;padding:5px 12px;border:none;border-radius:5px;font-size:12px;font-weight:500;cursor:pointer;transition:all var(--transition);line-height:1.4}
+.btn-primary{background:var(--primary);color:#fff}
+.btn-primary:hover{background:var(--primary-hover)}
+.btn-success{background:var(--success);color:#fff}
+.btn-warning{background:var(--warning);color:#fff}
+.btn-danger{background:var(--danger);color:#fff}
+.btn-outline{background:transparent;color:var(--text-secondary);border:1px solid var(--border)}
+.btn-outline:hover{background:#f1f5f9;border-color:#94a3b8}
+.btn-sm{padding:2px 8px;font-size:11px}
+.btn-group{display:flex;gap:4px;flex-wrap:wrap}
+.btn-active{background:var(--primary-light);color:var(--primary);border-color:var(--primary)}
+.btn-muted{opacity:0.5;cursor:default}
+
+/* Forms */
+.form-group{margin-bottom:10px}
+.form-group label{display:block;font-size:12px;font-weight:500;margin-bottom:2px;color:var(--text-primary)}
+.form-control{width:100%;padding:6px 10px;border:1px solid var(--border);border-radius:5px;font-size:12px;color:var(--text-primary);background:#fff;transition:border-color var(--transition);font-family:inherit}
+.form-control:focus{outline:none;border-color:var(--primary);box-shadow:0 0 0 3px var(--primary-light)}
+textarea.form-control{resize:vertical;min-height:50px}
+select.form-control{appearance:auto}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.form-actions{display:flex;gap:6px;justify-content:flex-end;margin-top:12px;padding-top:8px;border-top:1px solid var(--border)}
+
+/* Toolbar */
+.toolbar{display:flex;align-items:center;gap:8px;margin-bottom:10px;flex-wrap:wrap}
+.toolbar .search-box{position:relative;flex:1;min-width:180px;max-width:320px}
+.toolbar .search-box input{padding-left:28px}
+.toolbar .search-box .search-icon{position:absolute;left:8px;top:50%;transform:translateY(-50%);color:#94a3b8;font-size:12px}
+.toolbar .filter-select{min-width:110px}
+
+/* Tab Switch */
+.tab-switch{display:flex;gap:3px;background:#f1f5f9;padding:2px;border-radius:6px}
+.tab-btn{padding:5px 12px;border:none;border-radius:5px;font-size:11px;font-weight:500;cursor:pointer;background:transparent;color:var(--text-secondary);transition:all var(--transition)}
+.tab-btn.active{background:#fff;color:var(--text-primary);box-shadow:0 1px 2px rgba(0,0,0,0.08)}
+
+/* Modal */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.45);z-index:1000;align-items:center;justify-content:center;padding:20px}
+.modal-overlay.active{display:flex}
+.modal{background:#fff;border-radius:10px;width:100%;max-width:700px;max-height:90vh;overflow-y:auto;box-shadow:var(--shadow-lg);animation:modalIn 0.2s ease}
+@keyframes modalIn{from{opacity:0;transform:translateY(-20px) scale(0.97)}to{opacity:1;transform:translateY(0) scale(1)}}
+.modal-header{padding:12px 18px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;background:#fff;border-radius:10px 10px 0 0}
+.modal-header h3{font-size:14px;font-weight:600}
+.modal-close{background:none;border:none;font-size:18px;cursor:pointer;color:#94a3b8;padding:2px;line-height:1}
+.modal-close:hover{color:var(--text-primary)}
+.modal-body{padding:18px}
+.modal-wide{max-width:850px}
+
+/* Confirm */
+.confirm-dialog{max-width:360px;text-align:center}
+.confirm-dialog .confirm-icon{font-size:32px;margin-bottom:8px}
+.confirm-dialog .confirm-msg{font-size:13px;margin-bottom:4px}
+.confirm-dialog .confirm-sub{font-size:11px;color:var(--text-secondary);margin-bottom:14px}
+.confirm-dialog .form-actions{justify-content:center;border-top:none}
+
+/* Toast */
+.toast-container{position:fixed;top:14px;right:14px;z-index:9999;display:flex;flex-direction:column;gap:5px}
+.toast{padding:9px 16px;border-radius:6px;color:#fff;font-size:12px;font-weight:500;box-shadow:var(--shadow-lg);animation:toastIn 0.3s ease;min-width:200px;max-width:360px}
+.toast-success{background:var(--success)}
+.toast-error{background:var(--danger)}
+.toast-info{background:var(--primary)}
+@keyframes toastIn{from{opacity:0;transform:translateX(100px)}to{opacity:1;transform:translateX(0)}}
+.toast.removing{animation:toastOut 0.3s ease forwards}
+@keyframes toastOut{to{opacity:0;transform:translateX(100px)}}
+
+/* Timeline */
+.timeline{position:relative;padding-left:16px}
+.timeline::before{content:'';position:absolute;left:4px;top:4px;bottom:4px;width:2px;background:var(--border)}
+.timeline-item{position:relative;padding-bottom:12px}
+.timeline-item:last-child{padding-bottom:0}
+.timeline-item::before{content:'';position:absolute;left:-14px;top:5px;width:8px;height:8px;border-radius:50%;background:var(--primary);border:2px solid #fff;box-shadow:0 0 0 2px var(--primary)}
+.timeline-item .time{font-size:10px;color:var(--text-secondary)}
+.timeline-item .desc{font-size:12px;margin-top:2px}
+
+/* Profile */
+.profile-header{display:flex;gap:20px;align-items:flex-start;flex-wrap:wrap}
+.profile-avatar{width:80px;height:80px;border-radius:50%;background:var(--primary);color:#fff;display:flex;align-items:center;justify-content:center;font-size:28px;font-weight:700;flex-shrink:0}
+.profile-info{flex:1;min-width:200px}
+.profile-info .pi-name{font-size:20px;font-weight:700}
+.profile-info .pi-title{font-size:13px;color:var(--text-secondary);margin-top:2px}
+.profile-info .pi-meta{font-size:12px;color:var(--text-secondary);margin-top:6px;display:flex;gap:16px;flex-wrap:wrap}
+
+/* Year timeline */
+.year-card{border:1px solid var(--border);border-radius:var(--radius);margin-bottom:12px;overflow:hidden}
+.year-card .year-header{padding:10px 14px;background:#f8fafc;display:flex;align-items:center;justify-content:space-between;cursor:pointer;font-weight:600;font-size:14px;border-bottom:1px solid var(--border)}
+.year-card .year-body{padding:12px 14px;display:none}
+.year-card.open .year-body{display:block}
+.year-summary{background:#f0fdf4;padding:8px 10px;border-radius:4px;margin-bottom:10px;font-size:12px;border-left:3px solid var(--success)}
+.month-section{margin-bottom:10px}
+.month-section .month-label{font-weight:600;font-size:12px;color:var(--primary);margin-bottom:4px}
+.month-section .event-item{padding:4px 8px;font-size:12px;border-left:2px solid var(--border);margin-bottom:3px;margin-left:10px}
+
+/* Entry cards */
+.entry-card{border:1px solid var(--border);border-radius:var(--radius);padding:12px 14px;margin-bottom:8px;transition:box-shadow var(--transition)}
+.entry-card:hover{box-shadow:var(--shadow-lg)}
+.entry-card .entry-title{font-size:13px;font-weight:600;margin-bottom:4px;display:flex;justify-content:space-between;align-items:flex-start}
+.entry-card .entry-meta{font-size:11px;color:var(--text-secondary);margin-bottom:4px;display:flex;gap:8px;flex-wrap:wrap}
+.entry-card .entry-content{font-size:12px;color:var(--text-primary);line-height:1.5;white-space:pre-wrap}
+.entry-card .entry-content.collapsed{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.entry-card .entry-tags{margin-top:4px;display:flex;gap:3px;flex-wrap:wrap}
+.toggle-content{font-size:11px;color:var(--primary);cursor:pointer;background:none;border:none;padding:1px 0}
+
+/* Attachment */
+.attach-area{margin-top:8px;border:1px dashed var(--border);border-radius:6px;padding:8px 10px;background:#fafafa}
+.attach-area-title{font-size:11px;font-weight:500;color:var(--text-secondary);margin-bottom:4px}
+.attach-list{display:flex;flex-direction:column;gap:3px;margin-bottom:6px}
+.attach-item{display:flex;align-items:center;justify-content:space-between;background:#fff;border:1px solid var(--border);border-radius:4px;padding:4px 8px;font-size:12px}
+.attach-item .att-name{display:flex;align-items:center;gap:4px;color:var(--text-primary);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.attach-item .att-name a{color:var(--primary);cursor:pointer}
+.attach-item .att-size{font-size:10px;color:var(--text-secondary);margin-left:4px}
+.attach-item .att-actions{display:flex;gap:4px;flex-shrink:0;margin-left:8px}
+.attach-btn{display:inline-flex;align-items:center;gap:3px;padding:3px 8px;border:1px solid var(--border);border-radius:4px;font-size:11px;cursor:pointer;background:#fff;color:var(--text-secondary);transition:all var(--transition)}
+.attach-btn:hover{background:var(--primary-light);border-color:var(--primary);color:var(--primary)}
+
+/* Case Cards */
+.case-card{border:1px solid var(--border);border-radius:var(--radius);padding:12px 14px;margin-bottom:10px}
+.case-card .case-title{font-size:13px;font-weight:600;margin-bottom:4px;display:flex;justify-content:space-between;align-items:flex-start}
+.case-card .case-field{font-size:12px;margin-bottom:3px;line-height:1.5}
+.case-card .case-field strong{color:var(--primary)}
+
+/* Findings list */
+.findings-list{margin-top:6px}
+.finding-item{background:#f8fafc;border:1px solid var(--border);border-radius:4px;margin-bottom:4px;padding:6px 10px;font-size:12px}
+.finding-item .finding-header{display:flex;justify-content:space-between;align-items:center;cursor:pointer}
+.finding-item .finding-detail{display:none;margin-top:4px;padding-top:4px;border-top:1px solid var(--border)}
+.finding-item.open .finding-detail{display:block}
+
+/* Eval items */
+.eval-table{width:100%;font-size:12px;border-collapse:collapse;margin-bottom:6px}
+.eval-table th,.eval-table td{padding:5px 8px;border:1px solid var(--border);text-align:left}
+.eval-table th{background:#f8fafc;font-weight:600}
+
+/* Material cards */
+.mat-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:10px}
+.mat-card{border:1px solid var(--border);border-radius:var(--radius);padding:10px 12px;transition:box-shadow var(--transition)}
+.mat-card:hover{box-shadow:var(--shadow-lg)}
+.mat-card .mat-cat{font-size:10px;color:var(--primary);font-weight:500}
+.mat-card .mat-name{font-size:13px;font-weight:600}
+.mat-card .mat-detail{font-size:11px;color:var(--text-secondary);margin-top:1px}
+
+/* Flow chart */
+.flow-chart{display:flex;align-items:center;gap:6px;flex-wrap:wrap;padding:8px 0;overflow-x:auto}
+.flow-step{background:var(--primary-light);border:1px solid var(--primary);border-radius:4px;padding:4px 10px;font-size:11px;text-align:center;min-width:60px;white-space:nowrap;position:relative}
+.flow-arrow{color:#94a3b8;font-size:14px;flex-shrink:0}
+.flow-step .cp-count{font-size:9px;color:var(--text-secondary);display:block}
+
+/* Control points */
+.cp-list{display:flex;gap:4px;flex-wrap:wrap;margin-top:4px}
+.cp-item{background:#f0fdf4;border:1px solid #bbf7d0;border-radius:3px;padding:2px 6px;font-size:10px;color:var(--success)}
+
+/* Accordion */
+.accordion{border:1px solid var(--border);border-radius:var(--radius);overflow:hidden}
+.accordion-item{border-bottom:1px solid var(--border)}
+.accordion-item:last-child{border-bottom:none}
+.accordion-header{padding:9px 12px;cursor:pointer;font-weight:500;background:#fafafa;display:flex;align-items:center;justify-content:space-between;transition:background var(--transition);font-size:12.5px}
+.accordion-header:hover{background:#f1f5f9}
+.accordion-header .arrow{transition:transform var(--transition);font-size:10px}
+.accordion-item.open .accordion-header .arrow{transform:rotate(90deg)}
+.accordion-body{padding:0 12px;max-height:0;overflow:hidden;transition:max-height 0.3s ease,padding 0.3s ease}
+.accordion-item.open .accordion-body{padding:8px 12px;max-height:2000px}
+.std-item{padding:4px 0;border-bottom:1px solid #f1f5f9;font-size:12px}
+.std-item:last-child{border-bottom:none}
+.std-clause{color:var(--primary);font-weight:600}
+.std-title{font-weight:500}
+.std-desc{color:var(--text-secondary);font-size:11px;margin-top:1px}
+.std-iatf{color:#2563eb;font-weight:600}
+.std-iatf-desc{color:#1d4ed8;font-size:11px;margin-top:1px}
+
+/* Empty state */
+.empty-state{text-align:center;padding:28px 14px;color:var(--text-secondary)}
+.empty-state .empty-icon{font-size:36px;margin-bottom:8px;opacity:0.4}
+.empty-state .empty-text{font-size:13px}
+
+/* Responsive */
+@media(max-width:768px){
+  .sidebar{width:50px}
+  .sidebar .nav-item .label{display:none}
+  .sidebar .nav-item{justify-content:center;padding:8px}
+  .sidebar-header h1{font-size:0}
+  .sidebar-header h1::after{content:'SQE';font-size:12px}
+  .sidebar-header .subtitle,
+  .sidebar-footer{display:none}
+  .sidebar .nav-section-title{text-align:center;font-size:0}
+  .sidebar .nav-divider{margin:2px 6px}
+  .main-content{margin-left:50px}
+  .content-area{padding:8px 10px}
+  .form-row{grid-template-columns:1fr}
+  .stats-grid{grid-template-columns:repeat(2,1fr)}
+  .mat-grid{grid-template-columns:1fr}
+  .profile-header{flex-direction:column;align-items:center;text-align:center}
+}
+</style>
+</head>
+<body>
+<!-- ===== Sidebar ===== -->
+<aside class="sidebar">
+  <div class="sidebar-header">
+    <h1>SQE个人知识库</h1>
+    <div class="subtitle">个人经验积累系统</div>
+  </div>
+  <nav class="sidebar-nav">
+    <div class="nav-item active" data-page="dashboard"><span class="icon">📊</span><span class="label">仪表盘</span></div>
+    <div class="nav-item" data-page="profile"><span class="icon">👤</span><span class="label">个人介绍</span></div>
+    <div class="nav-section-title">业务模块</div>
+    <div class="nav-item" data-page="suppliers"><span class="icon">🏭</span><span class="label">供应商导入</span></div>
+    <div class="nav-item" data-page="iqc"><span class="icon">🔬</span><span class="label">IQC进料检验</span></div>
+    <div class="nav-item" data-page="audits"><span class="icon">📋</span><span class="label">稽核管理</span></div>
+    <div class="nav-item" data-page="changes"><span class="icon">🔄</span><span class="label">变更管理</span></div>
+    <div class="nav-item" data-page="ncrs"><span class="icon">⚠️</span><span class="label">异常处置</span></div>
+    <div class="nav-item" data-page="evaluations"><span class="icon">📈</span><span class="label">绩效评价</span></div>
+    <div class="nav-divider"></div>
+    <div class="nav-section-title">参考库</div>
+    <div class="nav-item" data-page="methods"><span class="icon">💼</span><span class="label">工作方法论</span></div>
+    <div class="nav-item" data-page="materials"><span class="icon">🧪</span><span class="label">原材料库</span></div>
+    <div class="nav-item" data-page="standards"><span class="icon">📖</span><span class="label">体系标准</span></div>
+  </nav>
+  <div class="sidebar-footer">V1 · 数据本地存储</div>
+</aside>
+
+<!-- ===== Main ===== -->
+<div class="main-content">
+  <header class="top-bar">
+    <div>
+      <span class="page-title" id="pageTitle">仪表盘</span>
+      <div class="breadcrumb" id="breadcrumb">SQE个人知识库</div>
+    </div>
+    <div><span id="currentTime" style="font-size:11px;color:var(--text-secondary);margin-right:12px;"></span><button class="btn btn-sm btn-outline" onclick="exportData()" title="导出所有数据为JSON文件">📤 导出</button><button class="btn btn-sm btn-outline" onclick="document.getElementById('importInput').click()" title="从JSON文件导入数据">📥 导入</button><input type="file" id="importInput" accept=".json" style="display:none" onchange="importData(event)"></div>
+  </header>
+  <div class="content-area">
+
+    <!-- ==================== DASHBOARD ==================== -->
+    <div class="page active" id="page-dashboard">
+      <div class="stats-grid" id="dashStats"></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+        <div class="card"><div class="card-header"><h3>📌 最近更新</h3></div><div class="card-body" id="dashTimeline"></div></div>
+        <div class="card"><div class="card-header"><h3>📊 模块统计</h3></div><div class="card-body" id="dashModuleStats"></div></div>
+      </div>
+    </div>
+
+    <!-- ==================== PROFILE ==================== -->
+    <div class="page" id="page-profile">
+      <div class="card">
+        <div class="card-header"><h3>👤 基本信息</h3><button class="btn btn-sm btn-outline" onclick="editProfile()">✏️ 编辑</button></div>
+        <div class="card-body" id="profileBody"></div>
+      </div>
+      <div class="card">
+        <div class="card-header"><h3>📅 工作成长履历</h3>
+          <div class="btn-group">
+            <button class="btn btn-sm btn-outline" onclick="addYear()">＋ 年份</button>
+          </div>
+        </div>
+        <div class="card-body" id="timelineBody"></div>
+      </div>
+    </div>
+
+    <!-- ==================== SUPPLIERS ==================== -->
+    <div class="page" id="page-suppliers">
+      <div class="card">
+        <div class="card-header"><h3>🏭 供应商导入管理</h3>
+          <div class="tab-switch" id="suppliers-tabs">
+            <button class="tab-btn active" onclick="switchTab('suppliers','req')">📋 文件要求</button>
+            <button class="tab-btn" onclick="switchTab('suppliers','case')">📝 案例总结</button>
+          </div>
+        </div>
+        <div class="card-body" id="suppliers-body"></div>
+      </div>
+    </div>
+
+    <!-- ==================== IQC ==================== -->
+    <div class="page" id="page-iqc">
+      <div class="card">
+        <div class="card-header"><h3>🔬 IQC 进料检验管理</h3>
+          <div class="tab-switch" id="iqc-tabs">
+            <button class="tab-btn active" onclick="switchTab('iqc','req')">📋 文件要求</button>
+            <button class="tab-btn" onclick="switchTab('iqc','case')">📝 案例总结</button>
+          </div>
+        </div>
+        <div class="card-body" id="iqc-body"></div>
+      </div>
+    </div>
+
+    <!-- ==================== AUDITS ==================== -->
+    <div class="page" id="page-audits">
+      <div class="card">
+        <div class="card-header"><h3>📋 稽核管理</h3>
+          <div class="tab-switch" id="audits-tabs">
+            <button class="tab-btn active" onclick="switchTab('audits','req')">📋 文件要求</button>
+            <button class="tab-btn" onclick="switchTab('audits','case')">📝 案例总结</button>
+          </div>
+        </div>
+        <div class="card-body" id="audits-body"></div>
+      </div>
+    </div>
+
+    <!-- ==================== CHANGES ==================== -->
+    <div class="page" id="page-changes">
+      <div class="card">
+        <div class="card-header"><h3>🔄 变更管理</h3>
+          <div class="tab-switch" id="changes-tabs">
+            <button class="tab-btn active" onclick="switchTab('changes','req')">📋 文件要求</button>
+            <button class="tab-btn" onclick="switchTab('changes','case')">📝 案例总结</button>
+          </div>
+        </div>
+        <div class="card-body" id="changes-body"></div>
+      </div>
+    </div>
+
+    <!-- ==================== NCRs ==================== -->
+    <div class="page" id="page-ncrs">
+      <div class="card">
+        <div class="card-header"><h3>⚠️ 异常处置管理</h3>
+          <div class="tab-switch" id="ncrs-tabs">
+            <button class="tab-btn active" onclick="switchTab('ncrs','req')">📋 文件要求</button>
+            <button class="tab-btn" onclick="switchTab('ncrs','case')">📝 案例总结</button>
+          </div>
+        </div>
+        <div class="card-body" id="ncrs-body"></div>
+      </div>
+    </div>
+
+    <!-- ==================== EVALUATIONS ==================== -->
+    <div class="page" id="page-evaluations">
+      <div class="card">
+        <div class="card-header"><h3>📈 绩效评价</h3>
+          <div class="tab-switch" id="evaluations-tabs">
+            <button class="tab-btn active" onclick="switchTab('evaluations','req')">📋 文件要求</button>
+            <button class="tab-btn" onclick="switchTab('evaluations','case')">📝 案例总结</button>
+          </div>
+        </div>
+        <div class="card-body" id="evaluations-body"></div>
+      </div>
+    </div>
+
+    <!-- ==================== METHODS ==================== -->
+    <div class="page" id="page-methods">
+      <div class="card">
+        <div class="card-header">
+          <h3>💼 工作方法论</h3>
+          <div class="tab-switch">
+            <button class="tab-btn active" data-mtype="hard" onclick="switchMethodTab('hard')">🔧 岗位硬技能</button>
+            <button class="tab-btn" data-mtype="soft" onclick="switchMethodTab('soft')">💬 职场软技能</button>
+          </div>
+        </div>
+        <div class="card-body" id="methods-body"></div>
+      </div>
+    </div>
+
+    <!-- ==================== MATERIALS ==================== -->
+    <div class="page" id="page-materials">
+      <div class="card">
+        <div class="card-header"><h3>🧪 原材料生产应用库</h3><button class="btn btn-primary" onclick="openMatForm()">＋ 新增物料</button></div>
+        <div class="card-body">
+          <div class="toolbar">
+            <div class="search-box"><span class="search-icon">🔍</span><input class="form-control" placeholder="搜索物料名称/规格..." oninput="renderMats()" id="matSearch"></div>
+            <select class="form-control filter-select" onchange="renderMats()" id="matFilter"><option value="">全部分类</option><option>光刻胶</option><option>化学品</option><option>气体</option><option>CMP浆料</option><option>靶材</option><option>石英/陶瓷</option><option>硅片</option><option>其他</option></select>
+          </div>
+          <div id="matGrid" class="mat-grid"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ==================== STANDARDS ==================== -->
+    <div class="page" id="page-standards">
+      <div class="card">
+        <div class="card-header"><h3>📖 ISO9001 / IATF16949 体系标准</h3></div>
+        <div class="card-body">
+          <p style="font-size:12px;color:var(--text-secondary);margin-bottom:10px;">点击展开章节 · <span style="color:#2563eb;font-weight:600;">蓝色条款</span> 为 IATF16949 较 ISO9001 新增/补充内容</p>
+          <div class="accordion" id="stdAccordion"></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-header"><h3>🔧 SQE 核心工具与方法</h3></div>
+        <div class="card-body">
+          <div class="accordion" id="toolAccordion"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== Modal ===== -->
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal" id="modalContent">
+    <div class="modal-header"><h3 id="modalTitle">标题</h3><button class="modal-close" onclick="closeModal()">&times;</button></div>
+    <div class="modal-body" id="modalBody"></div>
+  </div>
+</div>
+
+<!-- ===== Toast ===== -->
+<div class="toast-container" id="toastContainer"></div>
+
+<script>
+/* ===================================================================
+   数据层
+   =================================================================== */
+const S={requirements:'sqe_req',caseSummaries:'sqe_case',materials:'sqe_mat',activity:'sqe_act',profile:'sqe_profile',timeline:'sqe_timeline',methods:'sqe_method'};
+function load(k){try{return JSON.parse(localStorage.getItem(k))||[]}catch{return[]}}
+function save(k,d){localStorage.setItem(k,JSON.stringify(d))}
+function genId(){return Date.now().toString(36)+Math.random().toString(36).slice(2,6)}
+function today(){return new Date().toISOString().slice(0,10)}
+function nowStr(){return new Date().toLocaleString('zh-CN',{hour12:false})}
+function fmtDate(d){if(!d)return'-';return new Date(d).toLocaleDateString('zh-CN')}
+function logAct(a,m){const l=load(S.activity);l.unshift({id:genId(),action:a,module:m,time:nowStr(),date:today()});if(l.length>200)l.length=200;save(S.activity,l)}
+
+/* ---- Seed ---- */
+function initSeed(){
+  // 若已初始化过（用户升级旧版本），做增量补种/迁移
+  if(localStorage.getItem('sqe_v1_seeded')){
+    const existing=load(S.methods);
+    if(!existing.length)seedMethods();
+    else migrateMethodTypes(); // 给旧方法论数据补 type 字段（硬技能/软技能）
+    return;
+  }
+  const now=2026;
+  // Profile
+  save(S.profile,{name:'你的姓名',title:'SQE 供应商质量工程师',company:'半导体 Fab 工厂',department:'质量部',phone:'138-xxxx-xxxx',email:'yourname@company.com',education:'本科/硕士',summary:'半导体行业 SQE，负责 Fab 厂原材料供应商质量管理，涵盖供应商导入、稽核、变更管理、异常处置及绩效评价等全流程工作。'});
+  // Timeline
+  save(S.timeline,[
+    {year:2022,company:'某半导体Fab厂',position:'SQE助理工程师',summary:'入行半导体行业，开始SQE职业生涯',months:[{month:'8月',events:['入职半导体Fab厂质量部','参与供应商导入流程培训']},{month:'10月',events:['独立完成首次供应商现场稽核']}]},
+    {year:2023,company:'某半导体Fab厂',position:'SQE工程师',summary:'积累项目经验，掌握核心工具',months:[{month:'3月',events:['完成ISO9001内审员培训']},{month:'6月',events:['主导首个SCAR关闭项目']},{month:'9月',events:['参与变更管理流程优化']}]},
+    {year:2024,company:'某半导体Fab厂',position:'SQE工程师',summary:'深入业务，主导多项改进',months:[{month:'2月',events:['完成IATF16949体系培训']},{month:'5月',events:['主导CMP浆料产线搬迁变更管理项目']},{month:'8月',events:['建立供应商绩效评价体系']}]},
+    {year:2025,company:'另一家半导体Fab厂',position:'SQE高级工程师',summary:'能力提升，承担更多职责',months:[{month:'1月',events:['参与新Fab厂建设供应商质量策划']},{month:'6月',events:['推动3家关键供应商质量体系升级']}]},
+  ]);
+  // Requirements
+  save(S.requirements,[
+    {id:'r1',module:'suppliers',title:'供应商准入流程',category:'流程要求',content:'1. 潜在供应商识别\n2. 供应商调查\n3. 资质审核\n4. 样品验证\n5. 小批量试用\n6. 列入AVL',tags:['SOP','准入'],updatedAt:'2024-06'},
+    {id:'r2',module:'iqc',title:'IQC 检验作业指导书',category:'流程要求',content:'IQC检验流程：\n1. 收料登记\n2. 外观检验\n3. 尺寸/性能测试\n4. 结果判定\n5. 系统过账\n6. 不合格品处理',tags:['IQC','SOP'],updatedAt:'2024-06'},
+    {id:'r3',module:'audits',title:'稽核检查表(IATF16949)',category:'审核清单',content:'1. 质量管理体系\n2. 文件控制\n3. 供应商管理\n4. 生产过程控制\n5. 检验与测试\n6. 不合格品管理',tags:['稽核','检查表'],updatedAt:'2024-05'},
+    {id:'r4',module:'changes',title:'变更管理流程',category:'流程要求',content:'1. 供应商提交PCN\n2. SQE评估风险等级\n3. 交叉功能团队评审\n4. 变更验证\n5. 批准/拒绝\n6. 变更关闭',tags:['PCN','变更'],updatedAt:'2024-05'},
+    {id:'r5',module:'ncrs',title:'8D 问题解决流程',category:'流程要求',content:'D1组建团队\nD2描述问题\nD3暂控措施\nD4根因分析\nD5纠正措施\nD6验证效果\nD7预防再发\nD8表彰团队',tags:['8D','异常'],updatedAt:'2024-06'},
+    {id:'r6',module:'evaluations',title:'供应商评分卡模板',category:'工具模板',content:'质量(40分): 来料合格率/SCAR关闭率\n交付(25分): 准时交货率\n成本(15分): 价格竞争力\n服务(10分): 响应速度\n技术(10分): 技术能力',tags:['绩效','评分卡'],updatedAt:'2024-05'},
+  ]);
+  // Work methods
+  seedMethods();
+  // Audit case summaries (new format)
+  // Case summaries: audit + change + NCR (merged)
+  save(S.caseSummaries, [...loadSAuditCases(), ...loadSCases(), ...loadSNcrs()]);
+  // Materials (enhanced)
+  save(S.materials, loadSMats());
+  // Activity
+  save(S.activity,[{id:genId(),action:'SQE V1 知识库初始化完成',module:'系统',time:nowStr(),date:today()}]);
+  localStorage.setItem('sqe_v1_seeded','1');
+}
+
+function hardMethodSeed(){
+  return [
+    {id:'m1',type:'hard',title:'SQE异常处理的8D跟进法',category:'问题解决',content:'1. 收到NCR后24h内建立异常档案，记录问题全貌\n2. 48h内推动供应商回复暂控措施（不要等8D）\n3. 暂控期间每日跟踪库存/生产影响\n4. 15天限期收回8D报告，逐项审核D4根因\n5. 措施验证：连续3批合格才算闭环\n6. 闭环后归档，提炼成经验案例',tags:['8D','异常处置','跟进节奏'],updatedAt:'2024-06'},
+    {id:'m2',type:'hard',title:'供应商稽核前的三查三看',category:'供应商管理',content:'三查：\n1. 查历史质量数据（NCR/SCAR/合格率趋势）\n2. 查以往稽核不符合项及整改进度\n3. 查供应商组织架构和人员变动\n\n三看：\n1. 看现场执行是否与文件一致（重点）\n2. 看关键工序和特殊特性的控制\n3. 看员工的实际操作和交接记录',tags:['稽核','准备','现场审核'],updatedAt:'2024-05'},
+    {id:'m3',type:'hard',title:'变更评审的FMEA思维',category:'质量工具',content:'评估任何变更都套用FMEA逻辑：\n1. 这个变更会影响什么？(识别失效)\n2. 影响有多严重？(严重度S)\n3. 发生概率多大？(频度O)\n4. 现有验证能否发现？(探测度D)\n5. RPN高的变更必须要求PPAP/现场审核\n6. 变更验证不只是首批，要覆盖统计批次',tags:['变更','FMEA','风险'],updatedAt:'2024-05'},
+    {id:'m7',type:'hard',title:'SPC控制图判读的八种异常模式',category:'质量工具',content:'控制图判异八准则（任一出现即判异常）：\n1. 1点超出A区（±3σ外）\n2. 连续9点在中心线同侧\n3. 连续6点递增或递减\n4. 连续14点上下交替\n5. 连续3点中有2点在A区（同侧）\n6. 连续5点中有4点在B区以外（同侧）\n7. 连续15点在C区内\n8. 连续8点在中心线两侧但无点在C区内\n\n实务要点：判异后先查测量系统(MSA)，再查设备/材料/方法，最后查人。',tags:['SPC','控制图','判异'],updatedAt:'2024-06'},
+    {id:'m6',type:'hard',title:'质量问题溯源的四层问到底',category:'问题解决',content:'追问供应商根因时，逐层深入：\n第1层：为什么会产生不良？(直接原因)\n第2层：为什么没被发现？(流出原因)\n第3层：为什么体系没拦住？(系统原因)\n第4层：为什么之前没预见到？(预防机制)\n\n只有问到第4层，才能从"救火"转向"防火"。',tags:['根因','5Why','问题解决'],updatedAt:'2024-03'},
+    {id:'m11',type:'hard',title:'供应商绩效数据的四象限分析法',category:'供应商管理',content:'以"质量得分"为横轴、"交付得分"为纵轴分四象限：\n\n① 高质量+高交付（明星）→ 深化合作，纳入战略供应商\n② 高质量+低交付（技术型）→ 协助改善产能与计划管理\n③ 低质量+高交付（速度型）→ 加严来料检验，推动质量体系升级\n④ 低质量+低交付（问题型）→ 启动替代供应商开发，限期整改\n\n配合绩效趋势（环比/同比）判断是改善还是恶化，避免单点误判。',tags:['绩效','数据分析','分级管理'],updatedAt:'2024-07'},
+  ];
+}
+
+function softMethodSeed(){
+  return [
+    {id:'m4',type:'soft',title:'与供应商谈判的3+1法则',category:'沟通表达',content:'3个准备：\n1. 明确底线目标和理想目标\n2. 准备数据支撑（市场行情/同类供应商报价）\n3. 预判对方诉求和让步空间\n\n1个原则：\n始终给对方"台阶"，谈判要留余地，关系比单次输赢重要',tags:['谈判','供应商','沟通'],updatedAt:'2024-04'},
+    {id:'m5',type:'soft',title:'汇报与文档的金字塔原则',category:'沟通表达',content:'1. 结论先行：先给判断/结论，再展开依据\n2. 以上统下：上层概括下层，逻辑递进\n3. 归类分组：相同类型内容放一起\n4. 逻辑递进：时间/结构/程度三种顺序\n\n适用场景：稽核报告、8D报告、变更评审报告、质量月报\n\n心得：领导最关心的是"结论+要不要我决策"，细节放后面。',tags:['文档','汇报','表达'],updatedAt:'2024-03'},
+    {id:'m9',type:'soft',title:'向领导汇报质量问题的3分钟法则',category:'向上管理',content:'开场30秒：结论先行\n"XX供应商出现XX问题，影响XX，我的建议是XX"\n\n中间90秒：关键事实\n- 影响范围（多少批次/多少产品/是否停线）\n- 已采取措施（暂控+围堵）\n- 供应商态度与配合度\n\n结尾60秒：需要支持\n- 需要什么资源/授权/决策\n- 何时反馈进展\n\n反面教训：不要一上来讲排查过程，领导会失去耐心；也不要说"我还在查"，要给时间点。',tags:['汇报','向上管理','表达'],updatedAt:'2024-07'},
+    {id:'m10',type:'soft',title:'跨部门推动改善的"借力"思维',category:'跨部门协作',content:'SQE推动改善时，单靠自己是推不动的，要会借力：\n\n1. 借"数据"的力 — 用数据说话，而不是用情绪\n2. 借"流程"的力 — 把要求写进流程文件/SOP，变成制度\n3. 借"客户"的力 — 客户要求是最强推动力\n4. 借"领导"的力 — 重大事项上升决策层\n5. 借"供应商"的力 — 让供应商去推动它的下游\n\n心得：能靠机制解决的，不要靠人情；能靠数据说服的，不要靠争论。',tags:['跨部门','推动力','协作'],updatedAt:'2024-06'},
+    {id:'m12',type:'soft',title:'SQE的职场定位：从"挑刺者"到"赋能者"',category:'职场感悟',content:'刚做SQE时，我以为工作就是找供应商的问题、开SCAR、扣分降级。\n\n做了两年才明白：\n• 只会挑刺的SQE，供应商表面配合、背后应付，问题反复出现\n• 能帮供应商解决问题的SQE，才真正降低质量风险\n\n转变方法：\n1. 稽核报告不只写"不符合"，还要给"改进建议"\n2. 异常处理不只追责，还要一起做根因分析\n3. 绩效评价不只打分，还要做QBR面对面复盘\n\n心得：SQE的价值不是"管住"供应商，而是"帮供应商变得更好，从而让我们的产品更好"。',tags:['职场感悟','定位','心态'],updatedAt:'2024-07'},
+    {id:'m13',type:'soft',title:'说"不"的艺术：如何拒绝不合理要求',category:'人际关系',content:'SQE常面对来自供应商、内部部门的不合理要求，直接拒绝伤关系，全盘接受伤自己。\n\n三步法：\n1. 先接情绪，再谈事实\n   "我理解你的难处" → 而不是"这不可能"\n2. 给替代方案，而不是给否定\n   "这个做不到，但我们可以这样..."\n3. 把规则摆前面，把个人立场藏后面\n   "这是体系要求/客户要求" 比 "我认为不行" 更有力\n\n心得：说"不"的目的不是赢，而是守住底线同时留住关系。',tags:['拒绝','人际关系','边界'],updatedAt:'2024-05'},
+    {id:'m14',type:'soft',title:'被质疑时的情绪管理：先处理心情，再处理事情',category:'情绪管理',content:'SQE是"夹心层"：供应商觉得你苛刻，内部觉得你不够强硬，出了问题第一个被问责。\n\n被质疑时的三步：\n1. 暂停6秒 — 不要第一时间反驳，让情绪降温\n2. 分离事实与评价 — "他说我工作没做好"是评价，"这次异常的响应慢了2小时"是事实\n3. 回到事实和方案 — 只回应事实，给出改进动作\n\n日常心法：\n• 把"被批评"当成信息，而不是对人格的否定\n• 记录情绪触发点，找到规律（如被质疑专业性时最容易急）\n• 找信任的同事/前辈复盘，不要自己憋着',tags:['情绪','心态','抗压'],updatedAt:'2024-07'},
+  ];
+}
+
+function seedMethods(){
+  save(S.methods,[...hardMethodSeed(),...softMethodSeed()]);
+}
+
+// 旧版方法论数据迁移：补 type 字段 + 分类名更新
+function migrateMethodTypes(){
+  const list=load(S.methods);
+  if(!list.length)return;
+  const catMap={'风险管控':'质量工具','沟通协调':'沟通表达','文档撰写':'沟通表达','思维模型':'问题解决','工具应用':'质量工具'};
+  const softCats=['沟通表达','向上管理','跨部门协作','情绪管理','人际关系','职场感悟'];
+  let changed=false;
+  for(const m of list){
+    if(!m.type){
+      if(catMap[m.category])m.category=catMap[m.category];
+      m.type=softCats.includes(m.category)?'soft':'hard';
+      changed=true;
+    }
+  }
+  // 补充种子示例（旧数据迁移后内容偏少、软技能分类单一）
+  if(!localStorage.getItem('sqe_method_seeded')){
+    for(const e of [...hardMethodSeed(),...softMethodSeed()]){
+      if(!list.find(m=>m.id===e.id)){list.push(e);changed=true;}
+    }
+    localStorage.setItem('sqe_method_seeded','1');
+  }
+  if(changed)save(S.methods,list);
+}
+
+function loadSAuditCases(){
+  return [
+  {id:'ac1',module:'audits',title:'Ferrotec 年度体系稽核',supplier:'Ferrotec',material:'石英环/石英窗片',auditType:'年度稽核',auditForm:'实地',score:65,prosSummary:'配合度好，现场5S尚可',consSummary:'质量管理体系严重不足，设备校准缺失',findings:[{id:'f1',desc:'CNC设备47台中23台超校准周期',rectification:'已完成全部设备校准，建立校准台账'},{id:'f2',desc:'生产过程无控制计划',rectification:'已建立控制计划，关键参数实施SPC监控'},{id:'f3',desc:'不合格品无隔离区域',rectification:'已设立不合格品隔离区并制定管理流程'},{id:'f4',desc:'8D报告未实际执行',rectification:'已完成8D培训，建立问题解决流程'}],personalSummary:'孤源供应商管理难度大，需推动其建立完整质量体系，同时开发第二供应商降低风险。',createdAt:'2024-04'},
+  {id:'ac2',module:'audits',title:'信越化学年度体系稽核',supplier:'信越化学',material:'ArF/KrF光刻胶',auditType:'年度稽核',auditForm:'实地',score:92,prosSummary:'质量管理体系健全，过程控制完善，人员素质高',consSummary:'文档管理可进一步优化电子化',findings:[{id:'f1',desc:'部分批次记录为纸质存档，查询不便',rectification:'已规划电子化文档系统，预计年底上线'}],personalSummary:'优秀供应商，质量意识强，建议作为标杆管理。',createdAt:'2024-05'},
+  {id:'ac3',module:'audits',title:'BASF 变更稽核（苏州扩产）',supplier:'BASF',material:'电镀液/清洗液',auditType:'变更稽核',auditForm:'实地',score:88,prosSummary:'变更验证数据充分，团队专业',consSummary:'变更通知时间略短',findings:[{id:'f1',desc:'变更通知仅提前45天（要求60天）',rectification:'已补发正式通知，变更验证计划已确认'}],personalSummary:'大型跨国化工企业变更管理规范，但对客户通知时间需在质量协议中明确。',createdAt:'2024-06'},
+  {id:'ac4',module:'audits',title:'北京有研亿金 线上体系稽核',supplier:'北京有研亿金',material:'钛靶/铜靶',auditType:'年度稽核',auditForm:'线上',score:78,prosSummary:'技术能力可，设备先进',consSummary:'质量管理成熟度待提升，文件记录不规范',findings:[{id:'f1',desc:'SPC控制图未及时更新',rectification:'已更新控制图，安排SPC培训'},{id:'f2',desc:'来料检验记录缺失部分数据',rectification:'已补充记录，建立检验记录模板'},{id:'f3',desc:'设备维护计划未按频率执行',rectification:'已调整维护计划并建立跟踪机制'}],personalSummary:'国产靶材供应商技术过关但管理体系需持续辅导，建议每半年跟进一次整改。',createdAt:'2024-07'},
+  ];
+}
+
+function loadSCases(){
+  return [
+  {id:'cc1',module:'changes',title:'CMP浆料产线搬迁变更',supplier:'Entegris',material:'氧化硅CMP浆料/铜CMP浆料',changeContent:'产线搬迁，搅拌灌装设备更新',changeLevel:'高',evaluations:[{item:'变更验证计划',criteria:'需含变更前后各30批对比',status:'已完成'},{item:'现场审核',criteria:'审核新产线设备/工艺',status:'已完成'},{item:'PPAP',criteria:'按Level 3提交',status:'已完成'},{item:'风险评估',criteria:'高风险变更需提交FMEA',status:'已完成'}],riskAssessment:'高风险，CMP浆料直接影响平坦化工艺，变更前后浆料一致性需严格验证',riskResponse:'1) 变更前后各30批全参数对比 2) 现场审核新产线 3) 增加变更初期3个月加严监控 4) 建立批次追溯台账',personalSummary:'高风险变更必须严格执行PCN流程，质量协议中应明确各类变更提前通知时间。',createdAt:'2024-05'},
+  {id:'cc2',module:'changes',title:'光刻胶聚合工艺优化',supplier:'信越化学',material:'ArF光刻胶',changeContent:'合成反应温度/时间参数优化，提升纯度',changeLevel:'中',evaluations:[{item:'变更前后数据对比',criteria:'金属杂质/MWD/CD均匀性',status:'已完成'},{item:'厂内验证',criteria:'3批全验证+加速老化测试',status:'已完成'},{item:'存储稳定性',criteria:'60°C/7天加速老化',status:'已完成'}],riskAssessment:'中等风险，光刻胶为关键材料，任何工艺参数变化需谨慎验证',riskResponse:'1) 变更前后对比数据审查 2) 厂内3批全验证 3) 变更后3个月CD参数批批监控 4) 更新材料规格书',personalSummary:'供应商主动优化值得鼓励，但必须通过变更流程验证。该案例验证了中风险变更管理流程的有效性。',createdAt:'2024-06'},
+  {id:'cc3',module:'changes',title:'苏州工厂新增电镀液产线',supplier:'BASF',material:'电镀液',changeContent:'苏州工厂扩产，新增电镀液产线',changeLevel:'中',evaluations:[{item:'产能验证',criteria:'新线产能满足需求',status:'已完成'},{item:'品质验证',criteria:'首批产品全检合格',status:'已完成'},{item:'现场审核',criteria:'审核产线符合要求',status:'已完成'}],riskAssessment:'中等风险，电镀液为湿法工艺关键化学品',riskResponse:'1) 现场审核 2) 首批产品100%全检 3) 增加前3个月月度质量报告',personalSummary:'供应商提前通知充分，变更管理规范，值得其他供应商学习。',createdAt:'2024-07'},
+  ];
+}
+
+function loadSNcrs(){
+  return [
+  {id:'nc1',module:'ncrs',title:'石英环尺寸批量偏差',supplier:'Ferrotec',material:'石英环(JGS2)',anomalyDesc:'连续3批石英环外径尺寸超差+0.08mm，规格±0.05mm。导致刻蚀机台卡盘配合过紧，晶圆边缘刻蚀速率偏差>5%，12片晶圆报废。',inventoryCheck:'库存排查：仓库现有5批共200片隔离待检。产线在用批次已完成标识追溯。',rootCause:'CNC设备未按时校准，刀具磨损未及时发现。供应商设备校准台账缺失，47台设备中23台超校准周期。',escapeCause:'来料检验仅抽检外观，未做关键尺寸全检。出货报告数据不真实。',correctiveActions:'短期：1) 全检库存石英环尺寸 2) 停用不合格批次 3) 紧急调货\n长期：1) CNC设备每周校准 2) 增加CMM全检 3) 建立刀具寿命管理 4) 来料增加尺寸SPC管控',effectivenessVerification:'3个月跟踪：后续8批尺寸CPK从0.8提升至1.33，无重复异常。',personalSummary:'石英件长期被忽视，该案例推动了石英件纳入关键物料管理。来料检验不能只靠供应商报告，关键尺寸需厂内验证。',createdAt:'2024-04'},
+  {id:'nc2',module:'ncrs',title:'高纯氮气颗粒物超标',supplier:'Air Liquide',material:'高纯氮气(≥99.9995%)',anomalyDesc:'产品缺陷率从0.8%升至1.5%，DOE排查确认为供气系统N2支路0.1μm颗粒物超标。',inventoryCheck:'立即切换备用氮气源，在线颗粒计数器显示备用源正常。受影响批次约2周产量。',rootCause:'供应商液氮储罐过滤器超期运行，未按规范更换。过滤器更换周期从12月延至18月未做评估。',escapeCause:'供气端无在线颗粒监测，无法及时发现品质波动。供应商无过滤器压差监控。',correctiveActions:'短期：1) 切换备用N2源 2) 安装在线颗粒计数器 3) 排查受影响批次\n长期：1) 过滤器更换周期缩短至6月 2) 增加压差监控报警 3) 月度气体质量报告',effectivenessVerification:'3个月验证：在线颗粒监测数据稳定，过滤器压差在正常范围，缺陷率恢复至0.7%。',personalSummary:'大宗气体常被认为是低风险物料，但影响是全厂级的。供气端实时监控+供应商端过滤器管理双保险是必须的。',createdAt:'2024-03'},
+  {id:'nc3',module:'ncrs',title:'靶材绑定层空洞率超标',supplier:'北京有研亿金',material:'钛靶(Ti 99.995%)',anomalyDesc:'钛靶绑定层空洞率>2%（规格≤1%），导致PVD溅射过程中颗粒缺陷增多，影响薄膜均匀性。',inventoryCheck:'库存3批靶材隔离。产线已安装的2批需确认打弧次数。',rootCause:'绑定工艺参数未优化，焊料填充不充分。供应商该型号为首批量产，工艺窗口未验证。',escapeCause:'供应商出厂超声检测扫描步进过大，小空洞漏检。来料未做绑定层超声复检。',correctiveActions:'短期：1) 隔离库存批次 2) 退回报废处理 3) 紧急采购替代批次\n长期：1) 供应商优化绑定工艺参数(DOE) 2) 出厂检测增加C-SAM全检 3) 来料增加超声抽检',effectivenessVerification:'DOE优化后连续5批空洞率<0.5%，C-SAM检测一致性良好。',personalSummary:'新供应商首批量产需加严验证。绑定层空洞是靶材关键质量特性，来料检验项目需覆盖。',createdAt:'2024-06'},
+  ];
+}
+
+function loadSMats(){
+  return [
+  {id:'m1',category:'光刻胶',name:'ArF浸没式光刻胶',spec:'ArFi 193nm 分辨率≤38nm',process:'光刻',supplier:'信越化学/JSR',params:'感度25mJ/cm² CD均匀性<1.5nm',flow:[{step:'合成聚合',cp:['反应温度控制±1°C','MWD在线监控']},{step:'纯化过滤',cp:['金属杂质<0.1ppb','颗粒过滤0.02μm']},{step:'配方调配',cp:['感度标定',' viscosity控制']},{step:'分装包装',cp:['洁净室Class100','密封性测试']}]},
+  {id:'m2',category:'CMP浆料',name:'氧化硅CMP浆料',spec:'pH 10.5 粒径~70nm',process:'CMP',supplier:'Entegris/Cabot',params:'去除速率>300nm/min 缺陷<0.1/cm²',flow:[{step:'研磨颗粒合成',cp:['粒径分布控制','pH调节']},{step:'添加剂调配',cp:['选择性调节剂浓度','分散剂比例']},{step:'混合搅拌',cp:['搅拌速度/时间','温度控制']},{step:'过滤包装',cp:['过滤器1μm/0.5μm','洁净度验证']}]},
+  {id:'m3',category:'气体',name:'高纯氮气N₂',spec:'纯度≥99.9995%',process:'通用',supplier:'Air Liquide/林德',params:'O₂<0.1ppm H₂O<0.1ppm',flow:[{step:'空气分离',cp:['精馏塔温度','纯度在线分析']},{step:'纯化处理',cp:['催化剂再生周期','过滤器更换']},{step:'储罐存储',cp:['储罐压力','纯度定期监测']},{step:'输送供应',cp:['管道材质认证','在线颗粒监测']}]},
+  {id:'m4',category:'靶材',name:'钛靶Ti',spec:'纯度≥99.995%',process:'PVD',supplier:'北京有研/日矿',params:'晶粒<50μm 氧<500ppm',flow:[{step:'熔炼铸造',cp:['真空度','杂质控制']},{step:'锻压热处理',cp:['晶粒尺寸控制','应力消除']},{step:'机械加工',cp:['尺寸精度±0.05mm','表面粗糙度']},{step:'绑定焊接',cp:['绑定层空洞率<1%','C-SAM全检']}]},
+  {id:'m5',category:'化学品',name:'硫酸H₂SO₄',spec:'EL级96% 颗粒<0.1μm',process:'湿法清洗',supplier:'BASF/三菱化学',params:'金属杂质<0.1ppb 颗粒<100个/mL',flow:[{step:'原料提纯',cp:['蒸馏纯度','金属杂质监控']},{step:'稀释调配',cp:['浓度精准控制','超纯水品质']},{step:'过滤封装',cp:['0.02μm过滤','洁净室环境']},{step:'品质检验',cp:['ICP-MS金属分析','液体颗粒计数']}]},
+  {id:'m6',category:'硅片',name:'12寸抛光硅片',spec:'300mm P型 1-100Ω·cm',process:'通用',supplier:'SUMCO/信越',params:'TTV<0.5μm 表面金属<1E10/cm²',flow:[{step:'拉晶',cp:['晶向控制','电阻率均匀性']},{step:'切割研磨',cp:['TTV控制','表面损伤层']},{step:'抛光清洗',cp:['表面粗糙度','颗粒/金属清洁度']},{step:'最终检验',cp:['颗粒扫描(≥0.09μm)','几何尺寸测量']}]},
+  ];
+}
+
+/* ===================================================================
+   UI 工具
+   =================================================================== */
+function showToast(msg,type='success'){
+  const c=document.getElementById('toastContainer');
+  const el=document.createElement('div');el.className='toast toast-'+type;el.textContent=msg;
+  c.appendChild(el);
+  setTimeout(()=>{el.classList.add('removing');setTimeout(()=>el.remove(),300);},3000);
+}
+function openModal(title,bodyHtml){
+  document.getElementById('modalTitle').textContent=title;
+  document.getElementById('modalBody').innerHTML=bodyHtml;
+  document.getElementById('modalOverlay').classList.add('active');
+}
+function closeModal(){
+  document.getElementById('modalOverlay').classList.remove('active');
+}
+document.getElementById('modalOverlay').addEventListener('click',e=>{if(e.target===document.getElementById('modalOverlay'))closeModal()});
+function confirmDialog(msg,sub,cb){
+  openModal('确认操作','<div class="confirm-dialog"><div class="confirm-icon">⚠️</div><div class="confirm-msg">'+msg+'</div>'+(sub?'<div class="confirm-sub">'+sub+'</div>':'')+'<div class="form-actions"><button class="btn btn-outline" onclick="closeModal()">取消</button><button class="btn btn-danger" id="confirmBtn">确认删除</button></div></div>');
+  document.getElementById('confirmBtn').addEventListener('click',()=>{closeModal();if(cb)cb()});
+}
+function showFormError(m){showToast(m,'error')}
+
+/* ===================================================================
+   路由
+   =================================================================== */
+const PAGE_NAMES={dashboard:'📊 仪表盘',profile:'👤 个人介绍',suppliers:'🏭 供应商导入',iqc:'🔬 IQC进料检验',audits:'📋 稽核管理',changes:'🔄 变更管理',ncrs:'⚠️ 异常处置',evaluations:'📈 绩效评价',methods:'💼 工作方法论',materials:'🧪 原材料库',standards:'📖 体系标准'};
+const MODULES=['suppliers','iqc','audits','changes','ncrs','evaluations'];
+let tabState={};
+
+function navigateTo(page){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+  const pe=document.getElementById('page-'+page);if(pe)pe.classList.add('active');
+  const ne=document.querySelector('.nav-item[data-page="'+page+'"]');if(ne)ne.classList.add('active');
+  document.getElementById('pageTitle').textContent=PAGE_NAMES[page]||page;
+  switch(page){
+    case'dashboard':renderDashboard();break;
+    case'profile':renderProfile();break;
+    case'methods':renderMethods();break;
+    case'materials':renderMats();break;
+    case'standards':renderStandards();break;
+    default:if(MODULES.includes(page))renderModuleTab(page);break;
+  }
+}
+document.querySelectorAll('.nav-item').forEach(el=>{el.addEventListener('click',()=>{window.location.hash='#'+el.dataset.page})});
+function handleHash(){const h=window.location.hash.slice(1)||'dashboard';if(PAGE_NAMES[h])navigateTo(h)}
+window.addEventListener('hashchange',handleHash);
+
+/* ===================================================================
+   仪表盘
+   =================================================================== */
+function renderDashboard(){
+  const reqs=load(S.requirements),cases=load(S.caseSummaries),mats=load(S.materials),act=load(S.activity),pr=load(S.profile),methods=load(S.methods);
+  document.getElementById('dashStats').innerHTML=
+    '<div class="stat-card"><div class="stat-label">📋 文件要求</div><div class="stat-value">'+reqs.length+'</div><div class="stat-sub">'+new Set(reqs.map(r=>r.module)).size+' 个模块</div></div>'+
+    '<div class="stat-card"><div class="stat-label">📝 案例总结</div><div class="stat-value">'+cases.length+'</div><div class="stat-sub">'+cases.filter(c=>c.module==='ncrs').length+' 个异常案例</div></div>'+
+    '<div class="stat-card"><div class="stat-label">💼 工作方法论</div><div class="stat-value">'+methods.length+'</div><div class="stat-sub">'+new Set(methods.map(m=>m.category)).size+' 个分类</div></div>'+
+    '<div class="stat-card"><div class="stat-label">🧪 原材料库</div><div class="stat-value">'+mats.length+'</div><div class="stat-sub">'+new Set(mats.map(m=>m.category)).size+' 个分类</div></div>';
+  const tl=document.getElementById('dashTimeline');
+  if(!act.length)tl.innerHTML='<div class="empty-state"><div class="empty-icon">📭</div><div class="empty-text">暂无动态</div></div>';
+  else tl.innerHTML='<div class="timeline">'+act.slice(0,6).map(a=>'<div class="timeline-item"><div class="time">'+(a.time||a.date)+'</div><div class="desc">'+a.action+'</div></div>').join('')+'</div>';
+
+  const ms=document.getElementById('dashModuleStats');
+  const mn={suppliers:'供应商导入',iqc:'IQC进料检验',audits:'稽核管理',changes:'变更管理',ncrs:'异常处置',evaluations:'绩效评价'};
+  ms.innerHTML=Object.entries(mn).map(([k,v])=>{
+    const rc=reqs.filter(r=>r.module===k).length,cc=cases.filter(c=>c.module===k).length;
+    return '<div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid var(--border);font-size:12px;"><span>'+v+'</span><span><span class="tag tag-blue">文件'+rc+'</span> <span class="tag tag-green">案例'+cc+'</span></span></div>';
+  }).join('');
+}
+
+/* ===================================================================
+   个人介绍
+   =================================================================== */
+function renderProfile(){
+  const p=load(S.profile);
+  document.getElementById('profileBody').innerHTML=
+    '<div class="profile-header"><div class="profile-avatar">'+(p.name?p.name[0]:'?')+'</div>'+
+    '<div class="profile-info"><div class="pi-name">'+(p.name||'未设置')+'</div>'+
+    '<div class="pi-title">'+(p.title||'')+' · '+(p.company||'')+' '+(p.department||'')+'</div>'+
+    '<div class="pi-meta"><span>📧 '+(p.email||'-')+'</span><span>📞 '+(p.phone||'-')+'</span><span>🎓 '+(p.education||'-')+'</span></div>'+
+    '<div style="margin-top:8px;font-size:12px;color:var(--text-secondary);line-height:1.5;background:#f8fafc;padding:10px;border-radius:4px;">'+(p.summary||'')+'</div></div></div>';
+
+  renderTimeline();
+}
+
+function renderTimeline(){
+  const data=load(S.timeline);
+  const container=document.getElementById('timelineBody');
+  if(!data.length){
+    container.innerHTML='<div class="empty-state"><div class="empty-icon">📅</div><div class="empty-text">暂无履历，点击"＋ 年份"添加</div></div>';
+    return;
+  }
+  data.sort((a,b)=>b.year-a.year);
+  container.innerHTML=data.map(y=>{
+    // 月份按数值降序排列（12月→1月）
+    const months=(y.months||[]).slice().sort((a,b)=>parseInt(b.month)-parseInt(a.month));
+    const ms=months.map(m=>{
+      const evts=(m.events||[]).map(e=>'<div class="event-item">• '+e+'</div>').join('');
+      return '<div class="month-section"><div class="month-label" style="display:flex;align-items:center;justify-content:space-between;"><span>'+m.month+'</span>'+
+        '<button class="btn btn-sm btn-outline" onclick="editMonth('+y.year+',\''+m.month+'\')" title="编辑'+m.month+'履历">✏️ 编辑</button></div>'+evts+'</div>';
+    }).join('');
+    return '<div class="year-card open"><div class="year-header" onclick="this.parentElement.classList.toggle(\'open\')"><span>📅 '+y.year+' 年</span><div class="btn-group" onclick="event.stopPropagation()">'+
+      '<button class="btn btn-sm btn-outline" onclick="editYearSummary('+y.year+')">✏️ 编辑</button>'+
+      '<button class="btn btn-sm btn-outline" onclick="addMonth('+y.year+')">＋ 月</button>'+
+      '<button class="btn btn-sm btn-outline" onclick="deleteYear('+y.year+')">🗑️</button></div></div>'+
+      '<div class="year-body">'+
+      '<div style="font-size:12px;color:var(--text-secondary);margin-bottom:6px;"><span class="tag tag-blue">🏢 '+(y.company||'未填写公司')+'</span> <span class="tag tag-green">💼 '+(y.position||'未填写岗位')+'</span></div>'+
+      (y.summary?'<div class="year-summary">💡 '+y.summary+'</div>':'')+ms+'</div></div>';
+  }).join('');
+}
+
+function editProfile(){
+  const p=load(S.profile);
+  openModal('编辑个人信息','<form id="profileForm" onsubmit="return false;">'+
+    '<div class="form-row"><div class="form-group"><label>姓名</label><input class="form-control" name="name" value="'+(p.name||'')+'"></div>'+
+    '<div class="form-group"><label>职位</label><input class="form-control" name="title" value="'+(p.title||'')+'"></div></div>'+
+    '<div class="form-row"><div class="form-group"><label>公司</label><input class="form-control" name="company" value="'+(p.company||'')+'"></div>'+
+    '<div class="form-group"><label>部门</label><input class="form-control" name="department" value="'+(p.department||'')+'"></div></div>'+
+    '<div class="form-row"><div class="form-group"><label>邮箱</label><input class="form-control" name="email" value="'+(p.email||'')+'"></div>'+
+    '<div class="form-group"><label>电话</label><input class="form-control" name="phone" value="'+(p.phone||'')+'"></div></div>'+
+    '<div class="form-group"><label>学历</label><input class="form-control" name="education" value="'+(p.education||'')+'"></div>'+
+    '<div class="form-group"><label>个人简介</label><textarea class="form-control" name="summary" rows="3">'+(p.summary||'')+'</textarea></div>'+
+    '<div class="form-actions"><button class="btn btn-outline" type="button" onclick="closeModal()">取消</button><button class="btn btn-primary" type="submit">保存</button></div></form>');
+  document.getElementById('profileForm').addEventListener('submit',function(e){
+    e.preventDefault();const fd=new FormData(this);const obj=Object.fromEntries(fd);
+    save(S.profile,obj);logAct('更新个人信息','个人介绍');closeModal();renderProfile();showToast('已保存');
+  });
+}
+
+function addYear(){
+  openModal('添加年份','<form id="addYearForm" onsubmit="return false;"><div class="form-group"><label>年份</label><input class="form-control" type="number" name="year" value="'+(new Date().getFullYear())+'" min="2020"></div>'+
+    '<div class="form-row"><div class="form-group"><label>就职公司</label><input class="form-control" name="company" placeholder="如: 某半导体Fab厂"></div>'+
+    '<div class="form-group"><label>担任岗位</label><input class="form-control" name="position" placeholder="如: SQE工程师"></div></div>'+
+    '<div class="form-group"><label>年度总结</label><textarea class="form-control" name="summary" rows="2"></textarea></div>'+
+    '<div class="form-actions"><button class="btn btn-outline" type="button" onclick="closeModal()">取消</button><button class="btn btn-primary" type="submit">添加</button></div></form>');
+  document.getElementById('addYearForm').addEventListener('submit',function(e){
+    e.preventDefault();const fd=new FormData(this);const obj=Object.fromEntries(fd);const year=parseInt(obj.year);
+    if(!year){showFormError('请输入年份');return;}
+    let list=load(S.timeline);
+    if(list.find(y=>y.year===year)){showFormError('该年份已存在');return;}
+    list.push({year:year,company:obj.company||'',position:obj.position||'',summary:obj.summary||'',months:[]});save(S.timeline,list);
+    logAct('添加工作履历年份: '+year,'个人介绍');closeModal();renderTimeline();showToast('年份添加成功');
+  });
+}
+
+function editYearSummary(year){
+  const list=load(S.timeline);const y=list.find(d=>d.year===year);if(!y)return;
+  openModal('编辑年份信息 - '+year+'年','<form id="editYearForm" onsubmit="return false;">'+
+    '<div class="form-row"><div class="form-group"><label>就职公司</label><input class="form-control" name="company" value="'+(y.company||'')+'" placeholder="如: 某半导体Fab厂"></div>'+
+    '<div class="form-group"><label>担任岗位</label><input class="form-control" name="position" value="'+(y.position||'')+'" placeholder="如: SQE工程师"></div></div>'+
+    '<div class="form-group"><label>年度总结</label><textarea class="form-control" name="summary" rows="3">'+(y.summary||'')+'</textarea></div>'+
+    '<div class="form-actions"><button class="btn btn-outline" type="button" onclick="closeModal()">取消</button><button class="btn btn-primary" type="submit">保存</button></div></form>');
+  document.getElementById('editYearForm').addEventListener('submit',function(e){
+    e.preventDefault();const fd=new FormData(this);
+    y.company=fd.get('company');y.position=fd.get('position');y.summary=fd.get('summary');
+    save(S.timeline,list);closeModal();renderTimeline();showToast('已保存');
+  });
+}
+
+function addMonth(year){
+  const list=load(S.timeline);const y=list.find(d=>d.year===year);if(!y)return;
+  const months=['1月','2月','3月','4月','5月','6月','7月','8月','9月','10月','11月','12月'];
+  openModal('添加月份 - '+year+'年','<form id="addMonthForm" onsubmit="return false;"><div class="form-group"><label>月份</label><select class="form-control" name="month">'+months.map(m=>'<option>'+m+'</option>').join('')+'</select></div><div class="form-group"><label>事件 (每行一个)</label><textarea class="form-control" name="events" rows="3" placeholder="输入事件描述，一行一个"></textarea></div><div class="form-actions"><button class="btn btn-outline" type="button" onclick="closeModal()">取消</button><button class="btn btn-primary" type="submit">添加</button></div></form>');
+  document.getElementById('addMonthForm').addEventListener('submit',function(e){
+    e.preventDefault();const fd=new FormData(this);const month=fd.get('month');const evts=fd.get('events').split('\n').filter(Boolean);
+    if(!y.months)y.months=[];y.months.push({month:month,events:evts});save(S.timeline,list);
+    logAct('添加工作履历: '+year+'年'+month,'个人介绍');closeModal();renderTimeline();showToast('月份添加成功');
+  });
+}
+
+function editMonth(year, month){
+  const list=load(S.timeline);const y=list.find(d=>d.year===year);if(!y)return;
+  const m=(y.months||[]).find(mm=>mm.month===month);if(!m)return;
+  const months=['1月','2月','3月','4月','5月','6月','7月','8月','9月','10月','11月','12月'];
+  openModal('编辑月份履历 - '+year+'年'+month,
+    '<form id="editMonthForm" onsubmit="return false;">'+
+    '<div class="form-group"><label>月份</label><select class="form-control" name="month">'+months.map(mm=>'<option'+(mm===month?' selected':'')+'>'+mm+'</option>').join('')+'</select></div>'+
+    '<div class="form-group"><label>事件 (每行一个)</label><textarea class="form-control" name="events" rows="5">'+(m.events||[]).join('\n')+'</textarea></div>'+
+    '<div class="form-actions"><button class="btn btn-outline" type="button" onclick="closeModal()">取消</button>'+
+    '<button class="btn btn-danger" type="button" onclick="deleteMonth('+year+',\''+month+'\')">🗑️ 删除该月</button>'+
+    '<button class="btn btn-primary" type="submit">保存</button></div></form>');
+  document.getElementById('editMonthForm').addEventListener('submit',function(e){
+    e.preventDefault();const fd=new FormData(this);const newMonth=fd.get('month');const evts=fd.get('events').split('\n').filter(Boolean);
+    // 若改选了月份且已存在同月份，则合并处理
+    if(newMonth!==month){
+      const exist=(y.months||[]).find(mm=>mm.month===newMonth&&mm!==m);
+      if(exist){showFormError('该月份已存在，请先删除再合并');return;}
+    }
+    m.month=newMonth;m.events=evts;save(S.timeline,list);
+    logAct('编辑工作履历: '+year+'年'+newMonth,'个人介绍');closeModal();renderTimeline();showToast('已保存');
+  });
+}
+
+function deleteMonth(year, month){
+  const list=load(S.timeline);const y=list.find(d=>d.year===year);if(!y)return;
+  confirmDialog('确认删除 '+year+'年'+month+' 的履历？','该月份下的所有事件将一并删除',()=>{
+    y.months=(y.months||[]).filter(mm=>mm.month!==month);save(S.timeline,list);
+    logAct('删除工作履历: '+year+'年'+month,'个人介绍');renderTimeline();showToast('已删除');
+  });
+}
+
+function deleteYear(year){
+  confirmDialog('确认删除 '+year+' 年的履历？','',()=>{
+    let list=load(S.timeline);save(S.timeline,list.filter(y=>y.year!==year));
+    logAct('删除工作履历年份: '+year,'个人介绍');renderTimeline();showToast('已删除');
+  });
+}
+
+/* ===================================================================
+   模块 Tab 渲染（通用）
+   =================================================================== */
+function switchTab(module,target){
+  tabState[module]=target;renderModuleTab(module);
+}
+
+function renderModuleTab(module){
+  const target=tabState[module]||'req';
+  const tabs=document.getElementById(module+'-tabs');
+  if(tabs){
+    tabs.querySelectorAll('.tab-btn').forEach((btn,i)=>{
+      btn.classList.toggle('active',(i===0 && target==='req')||(i===1 && target==='case'));
+    });
+  }
+  const body=document.getElementById(module+'-body');if(!body)return;
+  if(target==='req')renderRequirements(module,body);
+  else renderCaseSummaries(module,body);
+}
+
+/* ---- 文件要求 ---- */
+function renderRequirements(module,container){
+  const all=load(S.requirements);const data=all.filter(d=>d.module===module);
+  const mName=PAGE_NAMES[module]||module;
+  let html='<div class="toolbar"><div class="search-box"><span class="search-icon">🔍</span><input class="form-control" placeholder="搜索文件要求..." oninput="filterReqs(\''+module+'\')" id="reqSearch-'+module+'"></div>'+
+    '<select class="form-control filter-select" onchange="filterReqs(\''+module+'\')" id="reqCat-'+module+'"><option value="">全部分类</option><option>流程要求</option><option>管理要求</option><option>文书模板</option><option>审核清单</option><option>工具模板</option></select>'+
+    '<button class="btn btn-primary" onclick="openReqForm(\''+module+'\')">＋ 新增</button></div><div id="reqList-'+module+'">'+renderReqList(module,data)+'</div>';
+  container.innerHTML=html;
+}
+
+function renderReqList(module,data){
+  const search=(document.getElementById('reqSearch-'+module)?.value||'').toLowerCase();
+  const cat=document.getElementById('reqCat-'+module)?.value||'';
+  let f=data;
+  if(search)f=f.filter(r=>r.title.toLowerCase().includes(search)||r.content.toLowerCase().includes(search)||(r.tags||[]).some(t=>t.toLowerCase().includes(search)));
+  if(cat)f=f.filter(r=>r.category===cat);
+  if(!f.length)return'<div class="empty-state"><div class="empty-icon">📋</div><div class="empty-text">暂无数据，点击"新增"开始添加</div></div>';
+  const cc={'流程要求':'tag-blue','管理要求':'tag-purple','文书模板':'tag-green','审核清单':'tag-yellow','工具模板':'tag-gray'};
+  return f.map(r=>{
+    const atts=(r.attachments||[]).map(a=>'<div class="attach-item"><span class="att-name">📎 <a onclick="downloadAttachment(\''+r.id+'\',\''+a.id+'\')" title="'+a.name+'">'+a.name+'</a><span class="att-size">'+fmtSize(a.size)+'</span></span><span class="att-actions"><button class="btn btn-sm btn-outline" onclick="downloadAttachment(\''+r.id+'\',\''+a.id+'\')">⬇️</button></span></div>').join('');
+    return '<div class="entry-card"><div class="entry-title"><span>'+r.title+'</span><div class="btn-group"><button class="btn btn-sm btn-outline" onclick="openReqForm(\''+module+'\',\''+r.id+'\')">✏️</button><button class="btn btn-sm btn-outline" onclick="deleteReq(\''+r.id+'\')">🗑️</button></div></div>'+
+    '<div class="entry-meta"><span class="tag '+(cc[r.category]||'tag-gray')+'">'+(r.category||'')+'</span><span>更新: '+(r.updatedAt||'-')+'</span>'+(r.tags?r.tags.map(t=>'<span class="tag tag-gray">'+t+'</span>').join(''):'')+'</div>'+
+    '<div class="entry-content collapsed" id="reqC-'+r.id+'">'+r.content+'</div><button class="toggle-content" onclick="toggleReqC(\''+r.id+'\')">展开全文</button>'+
+    (atts?'<div class="attach-area"><div class="attach-area-title">📎 附件 ('+(r.attachments||[]).length+')</div><div class="attach-list">'+atts+'</div></div>':'')+
+    '</div>';
+  }).join('');
+}
+
+function filterReqs(module){
+  const all=load(S.requirements),data=all.filter(d=>d.module===module);
+  const el=document.getElementById('reqList-'+module);if(el)el.innerHTML=renderReqList(module,data);
+}
+function toggleReqC(id){const el=document.getElementById('reqC-'+id);if(!el)return;const b=el.nextElementSibling;el.classList.toggle('collapsed');b.textContent=el.classList.contains('collapsed')?'展开全文':'收起';}
+
+let keepAttachments=[],pendingAttachments=[];
+
+function openReqForm(module,id){
+  const all=load(S.requirements),item=id?all.find(d=>d.id===id):null,isEdit=!!item;
+  const cats=['流程要求','管理要求','文书模板','审核清单','工具模板'];
+  // 初始化附件状态
+  keepAttachments=(item&&item.attachments)?item.attachments.slice():[];
+  pendingAttachments=[];
+  openModal(isEdit?'编辑文件要求':'新增文件要求',
+    '<form id="reqForm" onsubmit="return false;"><input type="hidden" name="id" value="'+(item?item.id:'')+'"><input type="hidden" name="module" value="'+module+'">'+
+    '<div class="form-row"><div class="form-group"><label>标题 *</label><input class="form-control" name="title" value="'+(item?item.title:'')+'" required></div>'+
+    '<div class="form-group"><label>分类</label><select class="form-control" name="category">'+cats.map(c=>'<option'+(item&&item.category===c?' selected':'')+'>'+c+'</option>').join('')+'</select></div></div>'+
+    '<div class="form-group"><label>内容 *</label><textarea class="form-control" name="content" rows="8" required>'+(item?item.content:'')+'</textarea></div>'+
+    '<div class="form-group"><label>标签 (逗号分隔)</label><input class="form-control" name="tagsStr" value="'+(item?(item.tags||[]).join(', '):'')+'" placeholder="如: SOP, 流程"></div>'+
+    '<div class="form-group"><label>附件</label><div id="attachArea" style="width:100%;"></div>'+
+    '<input type="file" id="attachInput" multiple accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt,.jpg,.jpeg,.png" style="display:none" onchange="handleAttachSelect(event)">'+
+    '<button type="button" class="attach-btn" onclick="document.getElementById(\'attachInput\').click()">📎 上传附件（单个≤20MB）</button>'+
+    '<div style="font-size:11px;color:var(--text-secondary);margin-top:2px;">支持 PDF / Word / Excel / PPT / 图片 / 文本，附件随数据导出保存</div></div>'+
+    '<div class="form-actions"><button class="btn btn-outline" type="button" onclick="closeModal()">取消</button><button class="btn btn-primary" type="submit">'+(isEdit?'保存修改':'添加')+'</button></div></form>');
+  renderAttachArea();
+  document.getElementById('reqForm').addEventListener('submit',function(e){
+    e.preventDefault();const fd=new FormData(this);const obj=Object.fromEntries(fd);
+    if(!obj.title||!obj.content){showFormError('请填写标题和内容');return;}
+    obj.tags=obj.tagsStr?obj.tagsStr.split(/[,，、]/).map(t=>t.trim()).filter(Boolean):[];delete obj.tagsStr;obj.updatedAt=today();
+    // 合并附件（保留的已有 + 新上传）
+    obj.attachments=[...keepAttachments,...pendingAttachments];
+    const list=load(S.requirements);
+    if(obj.id){const idx=list.findIndex(d=>d.id===obj.id);if(idx>-1)list[idx]={...list[idx],...obj}}
+    else{obj.id=genId();list.push(obj)}
+    save(S.requirements,list);logAct((isEdit?'编辑':'新增')+'文件要求: '+obj.title,PAGE_NAMES[module]||module);
+    closeModal();renderModuleTab(module);showToast(isEdit?'已更新':'已添加');
+  });
+}
+
+/* ---- 附件工具（IndexedDB 存储） ---- */
+// IndexedDB 数据库封装：附件文件本体存浏览器数据库，localStorage 只存元信息
+const ATT_DB_NAME='sqe_attachments_db';
+let _dbPromise=null;
+function openAttDB(){
+  if(_dbPromise)return _dbPromise;
+  _dbPromise=new Promise((resolve,reject)=>{
+    const req=indexedDB.open(ATT_DB_NAME,1);
+    req.onupgradeneeded=function(e){
+      const db=e.target.result;
+      if(!db.objectStoreNames.contains('attachments')){
+        db.createObjectStore('attachments',{keyPath:'id'});
+      }
+    };
+    req.onsuccess=function(e){resolve(e.target.result)};
+    req.onerror=function(e){reject(e.target.error)};
+  });
+  return _dbPromise;
+}
+function idbPut(id,blob){
+  return openAttDB().then(db=>new Promise((resolve,reject)=>{
+    const tx=db.transaction('attachments','readwrite');
+    tx.objectStore('attachments').put({id:id,blob:blob});
+    tx.oncomplete=function(){resolve()};
+    tx.onerror=function(e){reject(e.target.error)};
+  }));
+}
+function idbGet(id){
+  return openAttDB().then(db=>new Promise((resolve,reject)=>{
+    const tx=db.transaction('attachments','readonly');
+    const req=tx.objectStore('attachments').get(id);
+    req.onsuccess=function(){resolve(req.result?req.result.blob:null)};
+    req.onerror=function(e){reject(e.target.error)};
+  }));
+}
+function idbDelete(id){
+  return openAttDB().then(db=>new Promise((resolve,reject)=>{
+    const tx=db.transaction('attachments','readwrite');
+    tx.objectStore('attachments').delete(id);
+    tx.oncomplete=function(){resolve()};
+    tx.onerror=function(e){reject(e.target.error)};
+  }));
+}
+// 清理一批附件 id
+async function idbDeleteMany(ids){
+  for(const id of ids){try{await idbDelete(id)}catch(e){}}
+}
+
+function fmtSize(bytes){
+  if(!bytes&&bytes!==0)return'';
+  if(bytes<1024)return bytes+' B';
+  if(bytes<1024*1024)return(bytes/1024).toFixed(1)+' KB';
+  return(bytes/1024/1024).toFixed(1)+' MB';
+}
+
+function renderAttachArea(){
+  const area=document.getElementById('attachArea');if(!area)return;
+  let html='';
+  if(keepAttachments.length){
+    html+='<div class="attach-list">'+keepAttachments.map(a=>'<div class="attach-item"><span class="att-name">📎 '+a.name+'<span class="att-size">'+fmtSize(a.size)+'</span></span><span class="att-actions"><button class="btn btn-sm btn-outline" onclick="downloadAttachmentById(\''+a.id+'\')">⬇️</button><button class="btn btn-sm btn-outline" onclick="removeKeepAtt(\''+a.id+'\')">🗑️</button></span></div>').join('')+'</div>';
+  }
+  if(pendingAttachments.length){
+    html+='<div class="attach-list">'+pendingAttachments.map(a=>'<div class="attach-item"><span class="att-name" style="color:var(--warning);">⬆️ '+a.name+'<span class="att-size">'+fmtSize(a.size)+'</span></span><span class="att-actions"><button class="btn btn-sm btn-outline" onclick="removePendingAtt(\''+a.id+'\')">🗑️</button></span></div>').join('')+'</div>';
+  }
+  if(!html)html='<div style="font-size:12px;color:var(--text-secondary);padding:4px 0;">暂无附件</div>';
+  area.innerHTML=html;
+}
+
+function handleAttachSelect(event){
+  const files=event.target.files;
+  if(!files||!files.length)return;
+  const MAX=20*1024*1024; // 20MB
+  for(let i=0;i<files.length;i++){
+    const f=files[i];
+    if(f.size>MAX){showFormError('「'+f.name+'」超过20MB限制，未添加');continue;}
+    const id=genId();
+    pendingAttachments.push({id:id,name:f.name,size:f.size,type:f.type||'application/octet-stream',uploadedAt:today()});
+    renderAttachArea();
+    // 文件本体异步存入 IndexedDB
+    idbPut(id,f).catch(()=>showToast('附件存储失败','error'));
+  }
+  event.target.value='';
+}
+
+function removeKeepAtt(id){keepAttachments=keepAttachments.filter(a=>a.id!==id);idbDelete(id).catch(()=>{});renderAttachArea();}
+function removePendingAtt(id){pendingAttachments=pendingAttachments.filter(a=>a.id!==id);idbDelete(id).catch(()=>{});renderAttachArea();}
+
+// 所有带附件的存储 key（文件要求 + 原材料库）
+function attachStoreKeys(){return [S.requirements,S.materials];}
+
+function getAttachmentById(attId){
+  for(const key of attachStoreKeys()){
+    const all=load(key);
+    for(const item of all){
+      const a=(item.attachments||[]).find(x=>x.id===attId);
+      if(a)return a;
+    }
+  }
+  return null;
+}
+
+function downloadAttachmentById(attId){
+  const att=getAttachmentById(attId)||keepAttachments.find(a=>a.id===attId)||pendingAttachments.find(a=>a.id===attId);
+  if(!att){showToast('附件信息不存在','error');return;}
+  idbGet(attId).then(blob=>{
+    if(!blob){showToast('附件文件已丢失（可能未成功存储）','error');return;}
+    triggerDownload(blob,att.name);
+  }).catch(()=>showToast('读取附件失败','error'));
+}
+
+function downloadAttachment(itemId,attId){
+  let att=null;
+  for(const key of attachStoreKeys()){
+    const item=load(key).find(r=>r.id===itemId);
+    if(item){att=(item.attachments||[]).find(a=>a.id===attId);if(att)break;}
+  }
+  if(!att){showToast('附件不存在','error');return;}
+  idbGet(attId).then(blob=>{
+    if(!blob){showToast('附件文件已丢失','error');return;}
+    triggerDownload(blob,att.name);
+  }).catch(()=>showToast('读取附件失败','error'));
+}
+
+function triggerDownload(blob,filename){
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');a.href=url;a.download=filename;
+  document.body.appendChild(a);a.click();document.body.removeChild(a);
+  setTimeout(()=>URL.revokeObjectURL(url),1000);
+  showToast('已开始下载: '+filename,'success');
+}
+
+function blobToDataURL(blob){
+  return new Promise((resolve,reject)=>{
+    const reader=new FileReader();
+    reader.onload=()=>resolve(reader.result);
+    reader.onerror=()=>reject(reader.error);
+    reader.readAsDataURL(blob);
+  });
+}
+function dataURLtoBlob(dataUrl){
+  try{
+    const parts=dataUrl.split(',');
+    const mimeMatch=parts[0].match(/:(.*?);/);
+    const bstr=atob(parts[1]);
+    const n=bstr.length;
+    const u8arr=new Uint8Array(n);
+    for(let i=0;i<n;i++)u8arr[i]=bstr.charCodeAt(i);
+    return new Blob([u8arr],{type:mimeMatch?mimeMatch[1]:'application/octet-stream'});
+  }catch(e){return null}
+}
+async function idbClearAll(){
+  const db=await openAttDB();
+  return new Promise((resolve,reject)=>{
+    const tx=db.transaction('attachments','readwrite');
+    tx.objectStore('attachments').clear();
+    tx.oncomplete=function(){resolve()};
+    tx.onerror=function(e){reject(e.target.error)};
+  });
+}
+
+function deleteReq(id){
+  const list=load(S.requirements);const item=list.find(d=>d.id===id);if(!item)return;
+  confirmDialog('确认删除"'+item.title+'"?','其所有附件将一并删除',()=>{
+    const attIds=(item.attachments||[]).map(a=>a.id);
+    idbDeleteMany(attIds).then(()=>{
+      save(S.requirements,list.filter(d=>d.id!==id));
+      logAct('删除文件要求: '+item.title,'');
+      renderModuleTab(item.module);showToast('已删除');
+    });
+  });
+}
+
+/* ---- 案例总结（通用渲染，模块各自格式化） ---- */
+function renderCaseSummaries(module,container){
+  const all=load(S.caseSummaries);const data=all.filter(d=>d.module===module);
+  let html='<div class="toolbar"><div class="search-box"><span class="search-icon">🔍</span><input class="form-control" placeholder="搜索..." oninput="filterCases(\''+module+'\')" id="caseSearch-'+module+'"></div>'+
+    '<button class="btn btn-primary" onclick="openCaseForm(\''+module+'\')">＋ 新增案例</button></div><div id="caseList-'+module+'">'+renderCaseList(module,data)+'</div>';
+  container.innerHTML=html;
+}
+
+function renderCaseList(module,data){
+  const search=(document.getElementById('caseSearch-'+module)?.value||'').toLowerCase();
+  let f=data;
+  if(search)f=f.filter(c=>c.title.toLowerCase().includes(search)||(c.supplier||'').toLowerCase().includes(search)||(c.material||'').toLowerCase().includes(search)||(c.tags||[]).some(t=>t.toLowerCase().includes(search)));
+  if(!f.length)return'<div class="empty-state"><div class="empty-icon">📝</div><div class="empty-text">暂无案例，点击"新增"开始记录</div></div>';
+  return f.map(c=>{
+    let fields='';
+    if(module==='audits'){
+      const findings=(c.findings||[]).map((f,i)=>'<div class="finding-item'+(i===0?' open':'')+'"><div class="finding-header" onclick="this.parentElement.classList.toggle(\'open\')"><span>#'+(i+1)+' '+(f.desc||'').slice(0,20)+'...</span><span>'+(f.rectification?'✅':'⏳')+'</span></div><div class="finding-detail"><div style="font-size:11px;color:var(--text-secondary);margin-bottom:2px;"><strong>问题描述：</strong>'+f.desc+'</div><div style="font-size:11px;color:var(--success);"><strong>整改情况：</strong>'+(f.rectification||'待整改')+'</div></div></div>').join('');
+      fields='<div class="case-field"><strong>🏢 供应商：</strong>'+c.supplier+'</div>'+
+        '<div class="case-field"><strong>🧪 涉及材料：</strong>'+(c.material||'-')+'</div>'+
+        '<div class="case-field"><strong>📋 稽核类型：</strong>'+('<span class="tag tag-blue">'+(c.auditType||'')+'</span>')+' · <strong>形式：</strong>'+('<span class="tag tag-green">'+(c.auditForm||'')+'</span>')+' · <strong>得分：</strong><strong>'+(c.score||'-')+'</strong></div>'+
+        '<div class="case-field"><strong>✅ 优点总结：</strong>'+(c.prosSummary||'-')+'</div>'+
+        '<div class="case-field"><strong>⚠️ 待改进：</strong>'+(c.consSummary||'-')+'</div>'+
+        '<div class="case-field"><strong>📌 发现项（'+(c.findings||[]).length+'条）：</strong></div><div class="findings-list">'+findings+'</div>'+
+        '<div class="case-field" style="margin-top:6px;"><strong>💡 个人总结：</strong>'+(c.personalSummary||'')+'</div>';
+    } else if(module==='changes'){
+      const evals=(c.evaluations||[]).map(e=>'<tr><td>'+(e.item||'')+'</td><td>'+(e.criteria||'')+'</td><td><span class="tag '+(e.status==='已完成'?'tag-green':e.status==='进行中'?'tag-yellow':'tag-gray')+'">'+(e.status||'-')+'</span></td></tr>').join('');
+      fields='<div class="case-field"><strong>🏢 供应商：</strong>'+c.supplier+'</div>'+
+        '<div class="case-field"><strong>🧪 涉及物料：</strong>'+(c.material||'-')+'</div>'+
+        '<div class="case-field"><strong>📋 变更内容：</strong>'+(c.changeContent||'-')+'</div>'+
+        '<div class="case-field"><strong>⚠️ 变更等级：</strong>'+('<span class="tag '+(c.changeLevel==='高'?'tag-red':c.changeLevel==='中'?'tag-yellow':'tag-green')+'">'+(c.changeLevel||'-')+'</span>')+'</div>'+
+        '<div class="case-field"><strong>📊 评估情况：</strong></div><table class="eval-table"><thead><tr><th>评估项目</th><th>评估标准</th><th>完成情况</th></tr></thead><tbody>'+(evals||'<tr><td colspan="3">暂无</td></tr>')+'</tbody></table>'+
+        '<div class="case-field"><strong>⚠️ 风险评估：</strong>'+(c.riskAssessment||'-')+'</div>'+
+        '<div class="case-field"><strong>🛡️ 风险应对：</strong>'+(c.riskResponse||'-')+'</div>'+
+        '<div class="case-field"><strong>💡 个人总结：</strong>'+(c.personalSummary||'')+'</div>';
+    } else if(module==='ncrs'){
+      fields='<div class="case-field"><strong>🏢 供应商：</strong>'+c.supplier+'</div>'+
+        '<div class="case-field"><strong>🧪 涉及物料：</strong>'+(c.material||'-')+'</div>'+
+        '<div class="case-field"><strong>📋 异常描述：</strong>'+(c.anomalyDesc||'-')+'</div>'+
+        '<div class="case-field"><strong>📦 库存确认：</strong>'+(c.inventoryCheck||'-')+'</div>'+
+        '<div class="case-field"><strong>🔍 发生原因：</strong>'+(c.rootCause||'-')+'</div>'+
+        '<div class="case-field"><strong>🔎 流出原因：</strong>'+(c.escapeCause||'-')+'</div>'+
+        '<div class="case-field"><strong>🛠️ 改善措施：</strong>'+(c.correctiveActions||'-')+'</div>'+
+        '<div class="case-field"><strong>✅ 效果验证：</strong>'+(c.effectivenessVerification||'-')+'</div>'+
+        '<div class="case-field"><strong>💡 个人总结：</strong>'+(c.personalSummary||'')+'</div>';
+    } else {
+      // Generic format for suppliers/iqc/evaluations
+      fields='<div class="case-field"><strong>🏢 供应商：</strong>'+(c.supplier||'-')+'</div>'+
+        '<div class="case-field"><strong>📋 内容：</strong>'+(c.content||c.anomalyDesc||c.changeContent||'-')+'</div>'+
+        (c.rootCause?'<div class="case-field"><strong>🔍 根因：</strong>'+c.rootCause+'</div>':'')+
+        (c.countermeasures?'<div class="case-field"><strong>🛠️ 对策：</strong>'+c.countermeasures+'</div>':'')+
+        (c.summary?'<div class="case-field"><strong>💡 总结：</strong>'+c.summary+'</div>':'')+
+        (c.personalSummary?'<div class="case-field"><strong>💡 个人总结：</strong>'+c.personalSummary+'</div>':'');
+    }
+    return '<div class="case-card"><div class="case-title"><span>📌 '+c.title+'</span><div class="btn-group"><button class="btn btn-sm btn-outline" onclick="openCaseForm(\''+module+'\',\''+c.id+'\')">✏️</button><button class="btn btn-sm btn-outline" onclick="deleteCase(\''+c.id+'\')">🗑️</button></div></div>'+
+      fields+'<div style="font-size:10px;color:var(--text-secondary);margin-top:4px;">创建: '+(c.createdAt||'-')+'</div></div>';
+  }).join('');
+}
+
+function filterCases(module){
+  const all=load(S.caseSummaries),data=all.filter(d=>d.module===module);
+  const el=document.getElementById('caseList-'+module);if(el)el.innerHTML=renderCaseList(module,data);
+}
+
+/* ---- 新增/编辑案例（按模块区分格式） ---- */
+function openCaseForm(module,id){
+  const all=load(S.caseSummaries),item=id?all.find(d=>d.id===id):null,isEdit=!!item;
+
+  let formHtml='<form id="caseForm" onsubmit="return false;"><input type="hidden" name="id" value="'+(item?item.id:'')+'"><input type="hidden" name="module" value="'+module+'">';
+
+  // Common fields
+  formHtml+='<div class="form-group"><label>案例标题 *</label><input class="form-control" name="title" value="'+(item?item.title:'')+'" required></div>';
+
+  if(module==='audits'){
+    formHtml+='<div class="form-row"><div class="form-group"><label>供应商</label><input class="form-control" name="supplier" value="'+(item?item.supplier:'')+'"></div>'+
+      '<div class="form-group"><label>涉及材料</label><input class="form-control" name="material" value="'+(item?item.material:'')+'"></div></div>'+
+      '<div class="form-row"><div class="form-group"><label>稽核类型</label><select class="form-control" name="auditType"><option'+(item&&item.auditType==='年度稽核'?' selected':'')+'>年度稽核</option><option'+(item&&item.auditType==='异常稽核'?' selected':'')+'>异常稽核</option><option'+(item&&item.auditType==='变更稽核'?' selected':'')+'>变更稽核</option><option'+(item&&item.auditType==='其他'?' selected':'')+'>其他</option></select></div>'+
+      '<div class="form-group"><label>稽核形式</label><select class="form-control" name="auditForm"><option'+(item&&item.auditForm==='实地'?' selected':'')+'>实地</option><option'+(item&&item.auditForm==='线上'?' selected':'')+'>线上</option><option'+(item&&item.auditForm==='混合'?' selected':'')+'>混合</option></select></div></div>'+
+      '<div class="form-row"><div class="form-group"><label>稽核得分</label><input class="form-control" type="number" name="score" min="0" max="100" value="'+(item?item.score:'85')+'"></div><div class="form-group"></div></div>'+
+      '<div class="form-group"><label>优点总结</label><textarea class="form-control" name="prosSummary" rows="2">'+(item?item.prosSummary:'')+'</textarea></div>'+
+      '<div class="form-group"><label>待改进总结</label><textarea class="form-control" name="consSummary" rows="2">'+(item?item.consSummary:'')+'</textarea></div>'+
+      '<div class="form-group"><label>发现项（每行一条，格式：问题描述|整改情况）</label><textarea class="form-control" name="findingsStr" rows="4" placeholder="CNC设备未校准|已完成校准&#10;无控制计划|已建立控制计划">'+(item?(item.findings||[]).map(f=>f.desc+'|'+f.rectification).join('&#10;'):'')+'</textarea></div>'+
+      '<div class="form-group"><label>个人总结</label><textarea class="form-control" name="personalSummary" rows="2">'+(item?item.personalSummary:'')+'</textarea></div>';
+  } else if(module==='changes'){
+    formHtml+='<div class="form-row"><div class="form-group"><label>供应商</label><input class="form-control" name="supplier" value="'+(item?item.supplier:'')+'"></div>'+
+      '<div class="form-group"><label>涉及物料</label><input class="form-control" name="material" value="'+(item?item.material:'')+'"></div></div>'+
+      '<div class="form-group"><label>变更内容</label><textarea class="form-control" name="changeContent" rows="2">'+(item?item.changeContent:'')+'</textarea></div>'+
+      '<div class="form-row"><div class="form-group"><label>变更等级</label><select class="form-control" name="changeLevel"><option'+(item&&item.changeLevel==='高'?' selected':'')+'>高</option><option'+(item&&item.changeLevel==='中'?' selected':'')+'>中</option><option'+(item&&item.changeLevel==='低'?' selected':'')+'>低</option></select></div></div>'+
+      '<div class="form-group"><label>评估情况（每行一条，格式：评估项目|评估标准|完成情况）</label><textarea class="form-control" name="evalsStr" rows="3" placeholder="变更验证计划|需含30批对比|已完成&#10;现场审核|审核产线设备|已完成">'+(item?(item.evaluations||[]).map(e=>e.item+'|'+e.criteria+'|'+e.status).join('&#10;'):'')+'</textarea></div>'+
+      '<div class="form-group"><label>风险评估</label><textarea class="form-control" name="riskAssessment" rows="2">'+(item?item.riskAssessment:'')+'</textarea></div>'+
+      '<div class="form-group"><label>风险应对方案</label><textarea class="form-control" name="riskResponse" rows="2">'+(item?item.riskResponse:'')+'</textarea></div>'+
+      '<div class="form-group"><label>个人总结</label><textarea class="form-control" name="personalSummary" rows="2">'+(item?item.personalSummary:'')+'</textarea></div>';
+  } else if(module==='ncrs'){
+    formHtml+='<div class="form-row"><div class="form-group"><label>供应商</label><input class="form-control" name="supplier" value="'+(item?item.supplier:'')+'"></div>'+
+      '<div class="form-group"><label>涉及物料</label><input class="form-control" name="material" value="'+(item?item.material:'')+'"></div></div>'+
+      '<div class="form-group"><label>异常描述</label><textarea class="form-control" name="anomalyDesc" rows="3">'+(item?item.anomalyDesc:'')+'</textarea></div>'+
+      '<div class="form-group"><label>库存确认</label><textarea class="form-control" name="inventoryCheck" rows="2">'+(item?item.inventoryCheck:'')+'</textarea></div>'+
+      '<div class="form-row"><div class="form-group"><label>发生原因</label><textarea class="form-control" name="rootCause" rows="2">'+(item?item.rootCause:'')+'</textarea></div>'+
+      '<div class="form-group"><label>流出原因</label><textarea class="form-control" name="escapeCause" rows="2">'+(item?item.escapeCause:'')+'</textarea></div></div>'+
+      '<div class="form-group"><label>改善措施</label><textarea class="form-control" name="correctiveActions" rows="3">'+(item?item.correctiveActions:'')+'</textarea></div>'+
+      '<div class="form-group"><label>效果验证</label><textarea class="form-control" name="effectivenessVerification" rows="2">'+(item?item.effectivenessVerification:'')+'</textarea></div>'+
+      '<div class="form-group"><label>个人总结</label><textarea class="form-control" name="personalSummary" rows="2">'+(item?item.personalSummary:'')+'</textarea></div>';
+  } else {
+    // Generic (suppliers/iqc/evaluations)
+    formHtml+='<div class="form-row"><div class="form-group"><label>供应商</label><input class="form-control" name="supplier" value="'+(item?item.supplier:'')+'"></div>'+
+      '<div class="form-group"><label>涉及物料</label><input class="form-control" name="material" value="'+(item?item.material:'')+'"></div></div>'+
+      '<div class="form-group"><label>内容描述</label><textarea class="form-control" name="content" rows="3">'+(item?item.content||item.anomalyDesc||item.changeContent||'':'')+'</textarea></div>'+
+      '<div class="form-group"><label>处理过程</label><textarea class="form-control" name="processFlow" rows="2">'+(item?item.processFlow:'')+'</textarea></div>'+
+      '<div class="form-group"><label>总结反思</label><textarea class="form-control" name="summary" rows="2">'+(item?item.summary||item.personalSummary:'')+'</textarea></div>';
+  }
+  formHtml+='<div class="form-group"><label>标签 (逗号分隔)</label><input class="form-control" name="tagsStr" value="'+(item?(item.tags||[]).join(', '):'')+'" placeholder="如: 异常, 8D"></div>'+
+    '<div class="form-group"><label>创建日期</label><input class="form-control" type="text" name="createdAt" value="'+(item?item.createdAt:today().slice(0,7))+'"></div>'+
+    '<div class="form-actions"><button class="btn btn-outline" type="button" onclick="closeModal()">取消</button><button class="btn btn-primary" type="submit">'+(isEdit?'保存修改':'添加')+'</button></div></form>';
+
+  openModal(isEdit?'编辑案例总结':'新增案例总结',formHtml);
+  document.getElementById('caseForm').addEventListener('submit',function(e){
+    e.preventDefault();const fd=new FormData(this);const obj=Object.fromEntries(fd);
+    if(!obj.title){showFormError('请输入案例标题');return;}
+    // Parse structured fields
+    if(obj.findingsStr){obj.findings=obj.findingsStr.split('\n').filter(Boolean).map((s,i)=>{const p=s.split('|');return{id:'f'+i,desc:p[0]||'',rectification:p[1]||''}});delete obj.findingsStr;}
+    if(obj.evalsStr){obj.evaluations=obj.evalsStr.split('\n').filter(Boolean).map(s=>{const p=s.split('|');return{item:p[0]||'',criteria:p[1]||'',status:p[2]||'未开始'}});delete obj.evalsStr;}
+    obj.tags=obj.tagsStr?obj.tagsStr.split(/[,，、]/).map(t=>t.trim()).filter(Boolean):[];delete obj.tagsStr;
+    const list=load(S.caseSummaries);
+    if(obj.id){const idx=list.findIndex(d=>d.id===obj.id);if(idx>-1)list[idx]={...list[idx],...obj}}
+    else{obj.id=genId();list.push(obj)}
+    save(S.caseSummaries,list);logAct((isEdit?'编辑':'新增')+'案例: '+obj.title,PAGE_NAMES[module]||module);
+    closeModal();renderModuleTab(module);showToast(isEdit?'已更新':'已添加');
+  });
+}
+
+function deleteCase(id){
+  const list=load(S.caseSummaries);const item=list.find(d=>d.id===id);if(!item)return;
+  confirmDialog('确认删除"'+item.title+'"?','',()=>{save(S.caseSummaries,list.filter(d=>d.id!==id));logAct('删除案例: '+item.title,'');renderModuleTab(item.module);showToast('已删除')});
+}
+
+/* ===================================================================
+   工作方法论
+   =================================================================== */
+let methodTab='hard'; // 'hard' 岗位硬技能 / 'soft' 职场软技能
+const HARD_CATS=['问题解决','供应商管理','质量工具','技术知识','流程规范','项目管理','其他'];
+const SOFT_CATS=['沟通表达','向上管理','跨部门协作','情绪管理','人际关系','职场感悟','其他'];
+const METHOD_CATS={hard:HARD_CATS,soft:SOFT_CATS};
+const METHOD_LABEL={hard:'岗位硬技能',soft:'职场软技能'};
+
+function switchMethodTab(type){
+  methodTab=type;
+  document.querySelectorAll('#page-methods .tab-btn').forEach(b=>{
+    b.classList.toggle('active',b.dataset.mtype===type);
+  });
+  renderMethods();
+}
+
+function renderMethods(){
+  // 同步 Tab 按钮状态（从其他页面切回时保持正确）
+  document.querySelectorAll('#page-methods .tab-btn').forEach(b=>{
+    b.classList.toggle('active',b.dataset.mtype===methodTab);
+  });
+  const body=document.getElementById('methods-body');if(!body)return;
+  const cats=METHOD_CATS[methodTab];
+  const isHard=methodTab==='hard';
+  body.innerHTML=
+    '<p style="font-size:12px;color:var(--text-secondary);margin-bottom:10px;">'+
+      (isHard?'🔧 总结工作中的<strong>理论、方法、工具</strong>，沉淀专业硬功':'💬 沉淀<strong>职场生存法则、沟通心得与个人感悟</strong>')+
+    '</p>'+
+    '<div class="toolbar">'+
+      '<div class="search-box"><span class="search-icon">🔍</span><input class="form-control" placeholder="搜索标题/内容..." oninput="renderMethodList()" id="methodSearch"></div>'+
+      '<select class="form-control filter-select" onchange="renderMethodList()" id="methodFilter"><option value="">全部分类</option>'+cats.map(c=>'<option>'+c+'</option>').join('')+'</select>'+
+      '<button class="btn btn-primary" onclick="openMethodForm()">＋ 新增</button>'+
+    '</div>'+
+    '<div id="methodList"></div>';
+  renderMethodList();
+}
+
+function renderMethodList(){
+  const all=load(S.methods).filter(m=>(m.type||'hard')===methodTab);
+  const search=(document.getElementById('methodSearch')?.value||'').toLowerCase();
+  const filter=document.getElementById('methodFilter')?.value||'';
+  let f=all;
+  if(search)f=f.filter(m=>m.title.toLowerCase().includes(search)||m.content.toLowerCase().includes(search)||(m.tags||[]).some(t=>t.toLowerCase().includes(search)));
+  if(filter)f=f.filter(m=>m.category===filter);
+  const list=document.getElementById('methodList');if(!list)return;
+  if(!f.length){
+    const icon=methodTab==='hard'?'🔧':'💬';
+    const tip=methodTab==='hard'?'暂无岗位硬技能记录，点击"新增"开始沉淀专业硬功':'暂无职场软技能记录，点击"新增"开始沉淀职场心得';
+    list.innerHTML='<div class="empty-state"><div class="empty-icon">'+icon+'</div><div class="empty-text">'+tip+'</div></div>';
+    return;
+  }
+  const catColors={'问题解决':'tag-red','供应商管理':'tag-purple','质量工具':'tag-blue','技术知识':'tag-green','流程规范':'tag-yellow','项目管理':'tag-gray',
+    '沟通表达':'tag-blue','向上管理':'tag-purple','跨部门协作':'tag-green','情绪管理':'tag-yellow','人际关系':'tag-red','职场感悟':'tag-gray','其他':'tag-gray'};
+  list.innerHTML=f.map(m=>'<div class="entry-card"><div class="entry-title"><span>'+m.title+'</span><div class="btn-group">'+
+    '<button class="btn btn-sm btn-outline" onclick="openMethodForm(\''+m.id+'\')">✏️</button>'+
+    '<button class="btn btn-sm btn-outline" onclick="deleteMethod(\''+m.id+'\')">🗑️</button></div></div>'+
+    '<div class="entry-meta"><span class="tag '+(catColors[m.category]||'tag-gray')+'">'+(m.category||'其他')+'</span><span>更新: '+(m.updatedAt||'-')+'</span>'+(m.tags?m.tags.map(t=>'<span class="tag tag-gray">'+t+'</span>').join(''):'')+'</div>'+
+    '<div class="entry-content collapsed" id="methodC-'+m.id+'">'+m.content+'</div>'+
+    '<button class="toggle-content" onclick="toggleMethodC(\''+m.id+'\')">展开全文</button></div>').join('');
+}
+
+function toggleMethodC(id){const el=document.getElementById('methodC-'+id);if(!el)return;const b=el.nextElementSibling;el.classList.toggle('collapsed');b.textContent=el.classList.contains('collapsed')?'展开全文':'收起';}
+
+function updateMethodCats(type){
+  const sel=document.getElementById('methodCatSel');if(!sel)return;
+  sel.innerHTML=METHOD_CATS[type].map(c=>'<option>'+c+'</option>').join('');
+}
+
+function openMethodForm(id){
+  const data=load(S.methods),item=id?data.find(d=>d.id===id):null,isEdit=!!item;
+  const type=item?(item.type||'hard'):methodTab;
+  const cats=METHOD_CATS[type];
+  const catOptions=cats.map(c=>'<option'+(item&&item.category===c?' selected':'')+'>'+c+'</option>').join('');
+  openModal((isEdit?'编辑':'新增')+' · '+METHOD_LABEL[type],
+    '<form id="methodForm" onsubmit="return false;"><input type="hidden" name="id" value="'+(item?item.id:'')+'">'+
+    '<div class="form-row"><div class="form-group"><label>子模块</label><select class="form-control" name="type" onchange="updateMethodCats(this.value)">'+
+      '<option value="hard"'+(type==='hard'?' selected':'')+'>🔧 岗位硬技能</option>'+
+      '<option value="soft"'+(type==='soft'?' selected':'')+'>💬 职场软技能</option></select></div>'+
+    '<div class="form-group"><label>分类</label><select class="form-control" name="category" id="methodCatSel">'+catOptions+'</select></div></div>'+
+    '<div class="form-group"><label>标题 *</label><input class="form-control" name="title" value="'+(item?item.title:'')+'" required></div>'+
+    '<div class="form-group"><label>内容 *</label><textarea class="form-control" name="content" rows="8" placeholder="详细描述你的方法论，可含步骤/要点/注意事项/个人感悟" required>'+(item?item.content:'')+'</textarea></div>'+
+    '<div class="form-group"><label>标签 (逗号分隔)</label><input class="form-control" name="tagsStr" value="'+(item?(item.tags||[]).join(', '):'')+'" placeholder="如: 8D, 风险, 谈判"></div>'+
+    '<div class="form-actions"><button class="btn btn-outline" type="button" onclick="closeModal()">取消</button><button class="btn btn-primary" type="submit">'+(isEdit?'保存修改':'添加')+'</button></div></form>');
+  document.getElementById('methodForm').addEventListener('submit',function(e){
+    e.preventDefault();const fd=new FormData(this);const obj=Object.fromEntries(fd);
+    if(!obj.title||!obj.content){showFormError('请填写标题和内容');return;}
+    obj.tags=obj.tagsStr?obj.tagsStr.split(/[,，、]/).map(t=>t.trim()).filter(Boolean):[];delete obj.tagsStr;obj.updatedAt=today();
+    const list=load(S.methods);
+    if(obj.id){const idx=list.findIndex(d=>d.id===obj.id);if(idx>-1)list[idx]={...list[idx],...obj}}
+    else{obj.id=genId();list.push(obj)}
+    save(S.methods,list);logAct((isEdit?'编辑':'新增')+METHOD_LABEL[obj.type]+': '+obj.title,'工作方法论');
+    closeModal();methodTab=obj.type||'hard';switchMethodTab(methodTab);showToast(isEdit?'已更新':'已添加');
+  });
+}
+
+function deleteMethod(id){
+  const list=load(S.methods);const item=list.find(d=>d.id===id);if(!item)return;
+  confirmDialog('确认删除"'+item.title+'"?','',()=>{save(S.methods,list.filter(d=>d.id!==id));logAct('删除方法论: '+item.title,'工作方法论');renderMethodList();showToast('已删除')});
+}
+
+/* ===================================================================
+   原材料库（增强版：流程图+管控点）
+   =================================================================== */
+function renderMats(){
+  const data=load(S.materials);
+  const search=(document.getElementById('matSearch').value||'').toLowerCase();
+  const filter=document.getElementById('matFilter').value;
+  let f=data;
+  if(search)f=f.filter(m=>m.name.toLowerCase().includes(search)||m.spec.toLowerCase().includes(search)||m.supplier.toLowerCase().includes(search));
+  if(filter)f=f.filter(m=>m.category===filter);
+  const grid=document.getElementById('matGrid');
+  if(!f.length){grid.innerHTML='<div class="empty-state"><div class="empty-icon">🧪</div><div class="empty-text">暂无物料</div></div>';return;}
+  grid.innerHTML=f.map(m=>{
+    const flow=(m.flow||[]).map((s,i)=>'<div class="flow-step">'+(s.step||('步骤'+(i+1)))+(s.cp&&s.cp.length?'<span class="cp-count">'+s.cp.length+'个管控点</span>':'')+'</div>'+(i<(m.flow||[]).length-1?'<span class="flow-arrow">→</span>':'')).join('');
+    const cps=(m.flow||[]).flatMap(s=>s.cp||[]).map(c=>'<span class="cp-item">'+c+'</span>').join('');
+    const atts=(m.attachments||[]).map(a=>'<div class="attach-item"><span class="att-name">📎 <a onclick="downloadAttachment(\''+m.id+'\',\''+a.id+'\')" title="'+a.name+'">'+a.name+'</a><span class="att-size">'+fmtSize(a.size)+'</span></span><span class="att-actions"><button class="btn btn-sm btn-outline" onclick="downloadAttachment(\''+m.id+'\',\''+a.id+'\')">⬇️</button></span></div>').join('');
+    return '<div class="mat-card"><div class="mat-cat">'+m.category+'</div><div class="mat-name">'+m.name+'</div>'+
+      '<div class="mat-detail">📏 '+(m.spec||'-')+'</div>'+
+      '<div class="mat-detail">🔧 '+(m.process||'-')+' · 🏢 '+(m.supplier||'-')+'</div>'+
+      '<div class="mat-detail" style="margin-bottom:4px;">📊 '+(m.params||'-')+'</div>'+
+      (flow?'<div style="font-size:11px;font-weight:500;color:var(--text-secondary);margin:6px 0 2px;">生产流程:</div><div class="flow-chart">'+flow+'</div>':'')+
+      (cps?'<div style="font-size:11px;font-weight:500;color:var(--text-secondary);margin:4px 0 2px;">管控点:</div><div class="cp-list">'+cps+'</div>':'')+
+      (atts?'<div class="attach-area" style="margin-top:6px;"><div class="attach-area-title">📎 附件 ('+(m.attachments||[]).length+')</div><div class="attach-list">'+atts+'</div></div>':'')+
+      '<div style="margin-top:6px;"><button class="btn btn-sm btn-outline" onclick="openMatForm(\''+m.id+'\')">✏️ 编辑</button>'+
+      '<button class="btn btn-sm btn-outline" onclick="deleteMat(\''+m.id+'\')">🗑️ 删除</button></div></div>';
+  }).join('');
+}
+
+function openMatForm(id){
+  const data=load(S.materials),item=id?data.find(d=>d.id===id):null,isEdit=!!item;
+  const cats=['光刻胶','化学品','气体','CMP浆料','靶材','石英/陶瓷','硅片','其他'];
+  const procs=['光刻','刻蚀','薄膜','扩散','CMP','湿法清洗','PVD','CVD','通用'];
+  const flowStr=item?(item.flow||[]).map(s=>'【'+(s.step||'')+'】'+(s.cp||[]).join(', ')).join('&#10;'):'';
+  // 初始化附件状态
+  keepAttachments=(item&&item.attachments)?item.attachments.slice():[];
+  pendingAttachments=[];
+  openModal(isEdit?'编辑物料':'新增物料',
+    '<form id="matForm" onsubmit="return false;"><input type="hidden" name="id" value="'+(item?item.id:'')+'">'+
+    '<div class="form-row"><div class="form-group"><label>分类</label><select class="form-control" name="category">'+cats.map(c=>'<option'+(item&&item.category===c?' selected':'')+'>'+c+'</option>').join('')+'</select></div>'+
+    '<div class="form-group"><label>工艺</label><select class="form-control" name="process">'+procs.map(p=>'<option'+(item&&item.process===p?' selected':'')+'>'+p+'</option>').join('')+'</select></div></div>'+
+    '<div class="form-group"><label>名称 *</label><input class="form-control" name="name" value="'+(item?item.name:'')+'" required></div>'+
+    '<div class="form-group"><label>规格</label><input class="form-control" name="spec" value="'+(item?item.spec:'')+'"></div>'+
+    '<div class="form-group"><label>供应商</label><input class="form-control" name="supplier" value="'+(item?item.supplier:'')+'"></div>'+
+    '<div class="form-group"><label>关键参数</label><input class="form-control" name="params" value="'+(item?item.params:'')+'"></div>'+
+    '<div class="form-group"><label>生产流程图（每行一个步骤，格式：【步骤名】管控点1, 管控点2）</label><textarea class="form-control" name="flowStr" rows="4" placeholder="【合成聚合】温度控制±1°C, MWD监控&#10;【纯化过滤】金属杂质<0.1ppb, 0.02μm过滤">'+(flowStr||'')+'</textarea></div>'+
+    '<div class="form-group"><label>附件</label><div id="attachArea" style="width:100%;"></div>'+
+    '<input type="file" id="attachInput" multiple accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt,.jpg,.jpeg,.png" style="display:none" onchange="handleAttachSelect(event)">'+
+    '<button type="button" class="attach-btn" onclick="document.getElementById(\'attachInput\').click()">📎 上传附件（单个≤20MB）</button>'+
+    '<div style="font-size:11px;color:var(--text-secondary);margin-top:2px;">支持 PDF / Word / Excel / PPT / 图片 / 文本，如 COA、SDS、规格书、检测报告</div></div>'+
+    '<div class="form-actions"><button class="btn btn-outline" type="button" onclick="closeModal()">取消</button><button class="btn btn-primary" type="submit">'+(isEdit?'保存':'添加')+'</button></div></form>');
+  renderAttachArea();
+  document.getElementById('matForm').addEventListener('submit',function(e){
+    e.preventDefault();const fd=new FormData(this);const obj=Object.fromEntries(fd);
+    if(!obj.name){showFormError('请输入物料名称');return;}
+    // Parse flow
+    if(obj.flowStr){obj.flow=obj.flowStr.split('\n').filter(Boolean).map(s=>{const m=s.match(/【(.+?)】(.+)?/);return{step:m?m[1]:s,cp:m&&m[2]?m[2].split(/[,，、]/).map(t=>t.trim()).filter(Boolean):[]}});delete obj.flowStr;}
+    // 合并附件
+    obj.attachments=[...keepAttachments,...pendingAttachments];
+    const list=load(S.materials);
+    if(obj.id){const idx=list.findIndex(d=>d.id===obj.id);if(idx>-1)list[idx]={...list[idx],...obj}}
+    else{obj.id=genId();list.push(obj)}
+    save(S.materials,list);logAct((isEdit?'编辑':'新增')+'物料: '+obj.name,'原材料库');
+    closeModal();renderMats();showToast(isEdit?'已更新':'已添加');
+  });
+}
+
+function deleteMat(id){
+  const list=load(S.materials);const item=list.find(d=>d.id===id);if(!item)return;
+  confirmDialog('确认删除"'+item.name+'"?','其所有附件将一并删除',()=>{
+    const attIds=(item.attachments||[]).map(a=>a.id);
+    idbDeleteMany(attIds).then(()=>{
+      save(S.materials,list.filter(d=>d.id!==id));
+      logAct('删除物料: '+item.name,'原材料库');renderMats();showToast('已删除');
+    });
+  });
+}
+
+/* ===================================================================
+   体系标准（完整条款）
+   =================================================================== */
+function renderStandards(){
+  // ISO9001 + IATF16949 combined
+  const sections=[
+    {title:'4 组织环境',items:[
+      {c:'4.1',t:'理解组织及其背景',d:'确定与组织目标和战略方向相关并影响其实现QMS预期结果的能力的内部和外部因素。',iatf:false},
+      {c:'4.2',t:'理解相关方的需求和期望',d:'确定与QMS有关的相关方及其要求。',iatf:false},
+      {c:'4.3',t:'确定QMS的范围',d:'确定QMS的边界和适用性，考虑内外部因素、相关方要求和产品服务。',iatf:false},
+      {c:'4.4',t:'QMS及其过程',d:'建立、实施、保持和持续改进QMS，包括所需过程及其相互作用。',iatf:false},
+      {c:'4.4.1.1',t:'产品和过程的符合性',d:'确保外包过程受控，并验证其符合顾客和法律法规要求。',iatf:true},
+      {c:'4.4.1.2',t:'产品安全',d:'建立产品安全管理过程，包含识别法规要求、FMEA特殊批准、追溯等。',iatf:true},
+    ]},
+    {title:'5 领导作用',items:[
+      {c:'5.1',t:'领导作用和承诺',d:'最高管理者应通过确保质量方针目标建立、资源可用等展示领导作用。',iatf:false},
+      {c:'5.1.1.1',t:'企业责任',d:'明确员工行为准则和道德规范要求，包含反腐败、反贿赂等。',iatf:true},
+      {c:'5.2',t:'质量方针',d:'制定、实施和保持质量方针，并确保其与组织战略方向一致。',iatf:false},
+      {c:'5.3',t:'组织的角色、职责和权限',d:'确保各部门职责权限得到分配、沟通和理解。',iatf:false},
+      {c:'5.3.1',t:'质量职责和权限',d:'明确不符合快速反应和升级流程，确保顾客要求得到满足。',iatf:true},
+    ]},
+    {title:'6 策划',items:[
+      {c:'6.1',t:'应对风险和机遇的措施',d:'确定QMS所需的风险和机遇，策划应对措施。',iatf:false},
+      {c:'6.1.2.1',t:'风险分析',d:'进行风险分析（如FMEA），包括应急计划。',iatf:true},
+      {c:'6.2',t:'质量目标及其实现的策划',d:'在相关职能和层次建立质量目标，并策划实现措施。',iatf:false},
+      {c:'6.2.2.1',t:'质量目标与过程效率',d:'质量目标应包含过程效率和绩效指标，并定期评审。',iatf:true},
+      {c:'6.3',t:'变更的策划',d:'当需要变更时，应系统化进行策划并保持QMS完整性。',iatf:false},
+    ]},
+    {title:'7 支持',items:[
+      {c:'7.1',t:'资源',d:'确定并提供建立、实施、保持和改进QMS所需的资源。',iatf:false},
+      {c:'7.1.1.1',t:'测量系统分析(MSA)',d:'对每种测量和试验设备系统进行统计研究，分析其变差。',iatf:true},
+      {c:'7.1.3.2',t:'校准验证记录',d:'内部校准记录应包含设备偏差评定、环境条件、校准标准追溯等。',iatf:true},
+      {c:'7.1.4',t:'过程运行环境',d:'确定、提供和维护过程运行所需的环境（洁净室、静电防护等）。',iatf:false},
+      {c:'7.1.5.1',t:'内外部实验室',d:'内部实验室应符合ISO17025或等同标准，外部实验室应通过认可。',iatf:true},
+      {c:'7.2',t:'能力',d:'确保人员具备所需能力，采取适当措施获得所需能力。',iatf:false},
+      {c:'7.2.3',t:'内部审核员能力',d:'内部审核员应具备能力，包含对审核标准、过程方法和工具的理解。',iatf:true},
+      {c:'7.2.4',t:'第二方审核',d:'组织应对供应商进行第二方审核，审核频率基于风险评估。',iatf:true},
+      {c:'7.3',t:'意识',d:'确保人员意识到质量方针、相关质量目标和对QMS有效性的贡献。',iatf:false},
+      {c:'7.5',t:'形成文件的信息',d:'保持和保留形成文件的信息以支持QMS运行。',iatf:false},
+    ]},
+    {title:'8 运行',items:[
+      {c:'8.1',t:'运行策划和控制',d:'策划、实施和控制满足产品和服务要求所需的过程。',iatf:false},
+      {c:'8.1.1',t:'运行策划 — 产品和过程的符合性',d:'采用多方论证方法进行制造过程设计，确保产品安全。',iatf:true},
+      {c:'8.1.2',t:'保密',d:'确保顾客产品和服务相关的保密要求得到满足。',iatf:true},
+      {c:'8.2',t:'产品和服务的要求',d:'与顾客沟通、确定和评审产品和服务的要求。',iatf:false},
+      {c:'8.3',t:'产品和服务的设计和开发',d:'建立、实施和保持设计和开发过程。',iatf:false},
+      {c:'8.3.1.1',t:'设计和开发 — 补充',d:'多方论证方法（包括DFMEA/PFMEA、控制计划等）。',iatf:true},
+      {c:'8.3.2.3',t:'特殊特性',d:'识别和控制特殊特性，符号应标注在FMEA/控制计划/作业指导书上。',iatf:true},
+      {c:'8.3.3.1',t:'产品设计输入',d:'产品设计输入应包括FMEA/可制造性/可装配性等。',iatf:true},
+      {c:'8.3.4.3',t:'原型样件方案',t:'当有原型样件时，应制定控制/验证/试验方案。',iatf:true},
+      {c:'8.3.4.4',t:'产品批准(PPAP)',d:'建立产品批准过程，供应商变更/新零件需提交PPAP。',iatf:true},
+      {c:'8.4',t:'外部提供过程、产品和服务的控制',d:'确保外部提供的过程、产品和服务符合要求 — <strong>SQE核心条款！</strong>',iatf:false},
+      {c:'8.4.1.1',t:'供应商选择',d:'基于供应商绩效和风险评估进行选择，包含QMS开发要求。',iatf:true},
+      {c:'8.4.2.1',t:'供应商QMS开发',d:'供应商应通过ISO9001认证，并最终通过IATF16949认证。',iatf:true},
+      {c:'8.4.2.2',t:'供应商的供应商管理',d:'供应商应将其供应链的QMS要求向下传递。',iatf:true},
+      {c:'8.4.2.3',t:'供应商交付计划',d:'要求供应商提供100%交付能力验证，包括产能和应急方案。',iatf:true},
+      {c:'8.4.3',t:'供应商变更管理(PCN)',d:'供应商变更前应通知组织，包括产品/过程/产线/场地变更。',iatf:true},
+      {c:'8.5',t:'生产和服务提供',d:'在生产和服务提供的受控条件下进行。',iatf:false},
+      {c:'8.5.1.1',t:'控制计划',d:'建立控制计划（试生产/量产/转移），包含所有特殊特性。',iatf:true},
+      {c:'8.5.1.2',t:'标准化作业',d:'确保标准化作业文件得到编制、评审和更新。',iatf:true},
+      {c:'8.5.1.3',t:'作业准备验证',d:'进行作业准备验证（如首件检验），确保过程稳定。',iatf:true},
+      {c:'8.5.1.4',t:'停机验证',d:'对计划内和计划外停机后的验证要求进行规定。',iatf:true},
+      {c:'8.5.1.5',t:'全面生产维护(TPM)',d:'建立维护系统，包括预防性/预测性维护和备件管理。',iatf:true},
+      {c:'8.5.1.6',t:'生产工装管理',d:'建立工装管理系统，包含维护/存储/更换/修改等。',iatf:true},
+      {c:'8.5.1.7',t:'生产排程',d:'确保按顾客订单进行生产排程，监控准时交付。',iatf:true},
+      {c:'8.5.2',t:'标识和可追溯性',d:'在产品实现的全程使用适宜方法识别输出。',iatf:false},
+      {c:'8.5.2.1',t:'可追溯性 — 补充',d:'可追溯性计划应包含所有特殊特性，按顾客要求执行。',iatf:true},
+      {c:'8.5.3',t:'顾客或外部供方的财产',d:'爱护在组织控制下或使用的顾客和外部供方财产。',iatf:false},
+      {c:'8.5.4',t:'防护',d:'在产品处理和交付过程中保持产品符合性（包装/运输/存储）。',iatf:false},
+      {c:'8.5.5',t:'交付后的活动',d:'满足与产品和服务相关的交付后活动的要求。',iatf:false},
+      {c:'8.5.6',t:'变更控制',d:'对生产或服务提供的变更进行评审和控制。',iatf:false},
+      {c:'8.5.6.1',t:'变更控制 — 补充',d:'对影响产品/过程的变更进行验证，保持变更记录。临时变更应标识和日期。',iatf:true},
+      {c:'8.6',t:'产品和服务的放行',d:'验证产品和服务的要求已被满足，保留形成文件的信息。',iatf:false},
+      {c:'8.6.1',t:'统计工具(SPC)',d:'使用统计方法进行过程控制，如控制图、Cpk/Ppk分析。',iatf:true},
+      {c:'8.6.2',t:'全尺寸和功能测试',d:'对每种产品进行全尺寸测量和功能性验证，覆盖所有特殊特性。',iatf:true},
+      {c:'8.6.3',t:'外观件',d:'对外观件提供照明/颜色/纹理/光泽等标准和样件。',iatf:true},
+      {c:'8.7',t:'不合格输出的控制',d:'确保对不符合要求的输出进行识别和控制。',iatf:false},
+      {c:'8.7.1.1',t:'不合格品处理',d:'对不合格品进行标识隔离/评审处置/通知顾客/让步放行管理。',iatf:true},
+      {c:'8.7.1.2',t:'不合格品的处置',d:'返工产品需重新检验，返修需获得顾客批准。',iatf:true},
+    ]},
+    {title:'9 绩效评价',items:[
+      {c:'9.1',t:'监视、测量、分析和评价',d:'确定需要监视和测量的内容、方法、时机和分析评价准则。',iatf:false},
+      {c:'9.1.1.1',t:'制造过程监视',d:'对制造过程实施过程绩效监视（如OEE/良率/直通率等）。',iatf:true},
+      {c:'9.1.2.1',t:'供应商绩效监视',d:'建立供应商绩效指标：质量/交付/价格/响应等，定期评价。',iatf:true},
+      {c:'9.1.3',t:'顾客满意',d:'监视顾客对其需求满足程度的感受信息。',iatf:false},
+      {c:'9.1.3.1',t:'顾客满意 — 补充',d:'持续评价顾客满意，包括生产服务表现/交付/质量/问题解决等。',iatf:true},
+      {c:'9.2',t:'内部审核',d:'按策划的时间间隔进行内部审核，确保QMS符合性和有效性。',iatf:false},
+      {c:'9.2.2.1',t:'QMS审核',d:'审核所有过程（包括QMS/制造过程/产品审核）。',iatf:true},
+      {c:'9.2.2.2',t:'制造过程审核',d:'使用特定标准（如VDA6.3）对每个制造过程进行审核。',iatf:true},
+      {c:'9.2.2.3',t:'产品审核',d:'在适当阶段对产品进行审核以验证符合性。',iatf:true},
+      {c:'9.3',t:'管理评审',d:'按策划的时间间隔评审QMS，确保持续的适宜性、充分性和有效性。',iatf:false},
+    ]},
+    {title:'10 改进',items:[
+      {c:'10.1',t:'总则',d:'确定和选择改进机会并采取措施满足顾客要求和增强顾客满意。',iatf:false},
+      {c:'10.2',t:'不合格与纠正措施',d:'出现不合格时组织应采取措施以控制和纠正，防止再发生。',iatf:false},
+      {c:'10.2.3',t:'8D 问题解决',d:'采取结构化问题解决方法（如8D），适用于未达标供应商。',iatf:true},
+      {c:'10.2.4',t:'防错',d:'在纠正措施过程中使用防错方法，文件化并标明适用性。',iatf:true},
+      {c:'10.2.5',t:'保修管理系统',d:'建立保修管理系统，包含保修件分析和服务。',iatf:true},
+      {c:'10.2.6',t:'顾客投诉管理',d:'建立顾客投诉管理过程，包括升级流程和根本原因分析。',iatf:true},
+      {c:'10.3',t:'持续改进',d:'持续推进QMS的适宜性、充分性和有效性。',iatf:false},
+      {c:'10.3.1',t:'持续改进 — 补充',d:'实施持续改进过程，包括QMS/制造/产品/服务的改进。',iatf:true},
+    ]},
+  ];
+
+  document.getElementById('stdAccordion').innerHTML=sections.map((sec,si)=>{
+    const ihtml=sec.items.map(item=>{
+      const isIatf=item.iatf;
+      return '<div class="std-item"><span class="'+(isIatf?'std-iatf':'std-clause')+'">'+item.c+'</span> <span class="std-title'+(isIatf?' std-iatf':'')+'">'+item.t+'</span><div class="'+(isIatf?'std-iatf-desc':'std-desc')+'">'+item.d+(isIatf?' <span style="color:#2563eb;font-weight:500;">[IATF16949 新增]</span>':'')+'</div></div>';
+    }).join('');
+    return '<div class="accordion-item'+(si===0?' open':'')+'"><div class="accordion-header" onclick="this.parentElement.classList.toggle(\'open\')"><span>'+sec.title+'</span><span class="arrow">▶</span></div><div class="accordion-body">'+ihtml+'</div></div>';
+  }).join('');
+
+  // Tools accordion
+  const tools=[
+    {t:'PPAP 生产件批准程序',d:'供应商变更/新零件需提交PPAP，Level1-5。包含：设计记录、FMEA、控制计划、MSA、SPC、FAI、材料/性能测试、外观批准报告等18项要素。'},
+    {t:'FMEA 失效模式与影响分析',d:'识别过程和设计中的潜在失效模式，评估严重度(S)/频度(O)/探测度(D)，计算RPN=S×O×D。DFMEA+PFMEA+MFMEA三层次。'},
+    {t:'SPC 统计过程控制',d:'用控制图监控关键过程参数和产品特性。常用：Xbar-R图(计量)/P图(计件)/U图(计点)。Cpk≥1.33过程合格，Cpk≥1.67过程优秀。'},
+    {t:'MSA 测量系统分析',d:'评估测量系统的重复性&再现性(GR&R)、偏倚、线性、稳定性。GR&R%<10%优秀，10-30%可接受，>30%不合格。'},
+    {t:'APQP 先期产品质量策划',d:'5个阶段：①计划和定义→②产品设计开发→③过程设计开发→④产品和过程确认→⑤反馈评定和纠正措施。'},
+    {t:'8D 问题解决法',d:'D1团队→D2描述→D3暂控→D4根因(5Why+鱼骨图)→D5纠正→D6验证→D7预防→D8表彰。48h内回复暂控，15天内提交完整8D。'},
+    {t:'VDA 6.3 过程审核',d:'德系过程审核标准，P1-P7共7个要素：P1潜在供应商分析、P2项目管理、P3产品开发、P4过程开发、P5供应商管理、P6过程分析(含生产/检验/物流)、P7客户服务。'},
+  ];
+  document.getElementById('toolAccordion').innerHTML=tools.map((t,i)=>'<div class="accordion-item'+(i===0?' open':'')+'"><div class="accordion-header" onclick="this.parentElement.classList.toggle(\'open\')"><span>'+t.t+'</span><span class="arrow">▶</span></div><div class="accordion-body"><div style="font-size:12px;line-height:1.6;">'+t.d+'</div></div></div>').join('');
+}
+
+/* ===================================================================
+   数据导出/导入（像Excel一样保存和传输）
+   =================================================================== */
+async function exportData(){
+  showToast('正在打包数据与附件...','info');
+  const keys=Object.keys(localStorage).filter(k=>k.startsWith('sqe_'));
+  const data={};
+  keys.forEach(k=>{try{data[k]=JSON.parse(localStorage.getItem(k))}catch{data[k]=localStorage.getItem(k)}});
+  // 从 IndexedDB 读取所有附件转 base64（覆盖文件要求 + 原材料库）
+  const atts={};
+  for(const key of [S.requirements,S.materials]){
+    for(const item of (data[key]||[])){
+      for(const a of (item.attachments||[])){
+        try{
+          const blob=await idbGet(a.id);
+          if(blob)atts[a.id]=await blobToDataURL(blob);
+        }catch(e){}
+      }
+    }
+  }
+  data._attachments=atts;
+  data._export_meta={version:'V1',exportedAt:nowStr(),app:'SQE个人知识库',attachmentCount:Object.keys(atts).length};
+  const filename='SQE知识库备份_'+today()+'.json';
+  const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=filename;
+  document.body.appendChild(a);a.click();document.body.removeChild(a);
+  URL.revokeObjectURL(a.href);
+  logAct('导出数据备份: '+filename+'（含'+Object.keys(atts).length+'个附件）','系统');
+  showToast('✅ 已导出: '+filename,'success');
+}
+
+function importData(event){
+  const file=event.target.files[0];
+  if(!file)return;
+  const reader=new FileReader();
+  reader.onload=async function(e){
+    try{
+      const data=JSON.parse(e.target.result);
+      // 验证是否为有效的备份文件
+      if(!data._export_meta){
+        showToast('❌ 无效的备份文件格式','error');event.target.value='';return;
+      }
+      // 检查是否有冲突提示
+      const sqeKeys=Object.keys(data).filter(k=>k.startsWith('sqe_'));
+      if(!sqeKeys.length){
+        showToast('❌ 备份文件中没有找到SQE数据','error');event.target.value='';return;
+      }
+      const attCount=Object.keys(data._attachments||{}).length;
+      confirmDialog('确认导入数据？',
+        '将从 "'+file.name+'" 导入 '+sqeKeys.length+' 项数据'+(attCount?'（含'+attCount+'个附件）':'')+'。'+
+        '会覆盖当前所有内容（包括你已编辑的记录）。建议先导出备份。',
+        async function(){
+          try{
+            // 1. 清空旧的 IndexedDB 附件
+            await idbClearAll();
+            // 2. 写入新附件到 IndexedDB
+            const atts=data._attachments||{};
+            for(const [id,dataUrl] of Object.entries(atts)){
+              try{
+                const blob=dataURLtoBlob(dataUrl);
+                if(blob)await idbPut(id,blob);
+              }catch(err){}
+            }
+            // 3. 兼容旧备份（条目的 attachments 内含 data 字段）：提取到 IDB 并清理
+            for(const key of [S.requirements,S.materials]){
+              if(!data[key])continue;
+              for(const item of data[key]){
+                const keep=[];
+                for(const a of (item.attachments||[])){
+                  if(a.data){
+                    try{
+                      const blob=dataURLtoBlob(a.data);
+                      if(blob)await idbPut(a.id,blob);
+                    }catch(err){}
+                    delete a.data;
+                  }
+                  keep.push(a);
+                }
+                item.attachments=keep;
+              }
+            }
+            // 4. 写入 localStorage
+            sqeKeys.forEach(k=>{
+              try{localStorage.setItem(k,JSON.stringify(data[k]))}catch{localStorage.setItem(k,data[k])}
+            });
+            localStorage.removeItem('sqe_v1_seeded');
+            logAct('导入数据: '+file.name+(attCount?'（含'+attCount+'个附件）':''),'系统');
+            showToast('✅ 数据导入成功！页面即将刷新','success');
+            setTimeout(()=>location.reload(),1500);
+          }catch(err){
+            showToast('❌ 导入附件时出错: '+err.message,'error');
+          }
+        }
+      );
+    } catch(err){
+      showToast('❌ 文件解析失败: '+err.message,'error');
+    }
+    event.target.value='';
+  };
+  reader.readAsText(file);
+}
+
+/* ===================================================================
+   旧版附件迁移（localStorage base64 → IndexedDB）
+   =================================================================== */
+async function migrateOldAttachments(){
+  try{
+    for(const key of [S.requirements,S.materials]){
+      const list=load(key);
+      let changed=false;
+      for(const item of list){
+        const atts=item.attachments||[];
+        if(!atts.length)continue;
+        for(const a of atts){
+          if(a.data){
+            try{
+              const blob=dataURLtoBlob(a.data);
+              if(blob)await idbPut(a.id,blob);
+            }catch(e){}
+            delete a.data;
+            changed=true;
+          }
+        }
+      }
+      if(changed)save(key,list);
+    }
+  }catch(e){}
+}
+
+/* ===================================================================
+   时钟 & 启动
+   =================================================================== */
+function updateClock(){
+  document.getElementById('currentTime').textContent=new Date().toLocaleString('zh-CN',{hour12:false});
+}
+initSeed();
+handleHash();
+updateClock();
+setInterval(updateClock,10000);
+// 迁移旧版附件到 IndexedDB
+migrateOldAttachments();
+</script>
+</body>
+</html>
